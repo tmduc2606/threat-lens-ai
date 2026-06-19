@@ -1,6 +1,6 @@
 # ThreatLensAI
 
-**Production-grade cyber threat intelligence platform** — scan IPs, domains, CVEs, and OTX pulses with ML-powered classification, multi-source enrichment, and explainable results.
+**A cybersecurity intelligence platform that does neatly essential things** | scan IPs, domains, CVEs, and OTX pulses with ML-powered classification, multi-source enrichment, and explainable results.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
@@ -13,11 +13,11 @@ ThreatLensAI is a full-stack threat intelligence platform that aggregates data f
 
 **Key capabilities:**
 
-- **Multi-source enrichment** — AbuseIPDB, OTX, VirusTotal, NVD, EPSS, ThreatFox, URLhaus, MalwareBazaar, URLScan, RDAP, WhoisJSON, CISA KEV
-- **ML-powered classification** — 6 trained models for IP, domain, CVE, and OTX threat categorization
-- **Explainable results** — SHAP-based feature importance for every prediction
-- **Weighted composite scoring** — Multi-signal risk scoring calibrated to research standards
-- **Async architecture** — FastAPI + SQLAlchemy async with parallel API enrichment
+- **Multi-source enrichment**: AbuseIPDB, OTX, VirusTotal, NVD, EPSS, ThreatFox, URLhaus, MalwareBazaar, URLScan, RDAP, WhoisJSON, CISA KEV
+- **ML-powered classification**: 6 trained models for IP, domain, CVE, and OTX threat categorization
+- **Explainable results**: SHAP-based feature importance for every prediction
+- **Weighted composite scoring**: Multi-signal risk scoring calibrated to research standards
+- **Async architecture**: FastAPI + SQLAlchemy async with parallel API enrichment
 
 ## Architecture
 
@@ -62,19 +62,7 @@ threat-lens-ai/
 │   ├── outputs/artifacts/    # Training output mirrors
 │   ├── logs/                 # Training logs
 │   └── skills/               # ML/DL architect agent persona
-├── agents/                   # Critic agent personas for code review
-│   ├── code-reviewer.md
-│   ├── security-auditor.md
-│   ├── test-engineer.md
-│   └── web-performance-auditor.md
-├── skills/                   # Workflow skills (phase-gated)
-│   ├── spec-driven-development/
-│   ├── planning-and-task-breakdown/
-│   ├── code-review-and-quality/
-│   ├── security-and-hardening/
-│   └── shipping-and-launch/
 ├── logs/                     # Project logs, benchmarks, visual screenshots
-├── CHANGELOG.md              # Version history
 ├── docker-compose.yml        # PostgreSQL + API
 └── README.md
 ```
