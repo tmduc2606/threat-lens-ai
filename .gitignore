@@ -1,0 +1,76 @@
+# ThreatLensAI — Project .gitignore
+
+# Environment
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Model artifacts
+*.pkl
+*.pickle
+*.bin
+*.pt
+*.pth
+*.onnx
+*.sav
+
+# Training outputs (generated, not source)
+ml/outputs/
+ml/data/interim/
+ml/data/processed/
+ml/data/splits/
+
+# Agent personas and skill workflows (source docs, not code)
+agents/
+skills/
+
+# Logs and generated files
+*.log
+logs/savestates/
+logs/visual_logs/node_modules/
+logs/visual_logs/*.png
+logs/visual_logs/*.jpg
+logs/visual_logs/benchmark_results.json
+logs/visual_logs/responsive_results.json
+logs/visual_logs/lighthouse_*.json
+logs/visual_logs_issue/
+
+# Archives
+*.zip
+*.tar.gz
+
+# Docker
+.docker/

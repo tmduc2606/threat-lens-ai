@@ -1,0 +1,7 @@
+{
+  "cve_tfidf_logreg": "v1.0.0",
+  "domain_model": "v1.0.0",
+  "ip_xgb_model": "v1.0.3",
+  "ip_logreg_model": "v1.0.3",
+  "otx_minilm_logreg": "v1.0.0"
+}

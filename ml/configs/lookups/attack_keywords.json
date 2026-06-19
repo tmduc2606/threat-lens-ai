@@ -1,0 +1,12 @@
+{
+  "cobalt strike": "t1055",
+  "dll sideload": "t1574",
+  "macro": "t1204",
+  "mimikatz": "t1003",
+  "phishing": "t1566",
+  "powershell": "t1059",
+  "registry run": "t1547",
+  "rundll32": "t1218",
+  "scheduled task": "t1053",
+  "wmi": "t1047"
+}

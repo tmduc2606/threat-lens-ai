@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: threatlensai-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: threatlensai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - threatlensai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: threatlensai-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/threatlensai
+      MODELS_DIR: /models
+      FRONTEND_API_BASE: http://localhost:8000
+      CORS_ORIGINS: http://localhost:3000,http://localhost:8080,http://localhost:5500
+      API_PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models
+      - ./backend/data:/app/data
+      - ./backend/.env:/app/backend/.env
+
+volumes:
+  threatlensai_pgdata:

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreatLensAI — Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: {
+            glow: "0 0 0 1px rgba(148, 163, 184, 0.12), 0 16px 40px rgba(0, 0, 0, 0.35)"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./assets/css/tailwind.css" />
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <main class="mx-auto min-h-screen max-w-7xl px-4 py-6 md:px-8">
+    <header class="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-glow backdrop-panel md:flex-row md:items-center md:justify-between">
+      <div>
+        <a href="./index.html" class="text-xs uppercase tracking-[0.25em] text-cyan-300">ThreatLensAI</a>
+        <h1 class="mt-1 text-2xl font-bold">Record details</h1>
+        <p class="mt-1 text-sm text-slate-400">Full metadata for <span id="detailQuery" class="font-mono text-cyan-300"></span></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button data-theme-toggle type="button" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white hover:bg-slate-700">☀️ Light</button>
+        <a id="resultsLink" href="./results.html" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white hover:bg-slate-700">Results</a>
+      </div>
+    </header>
+
+    <section id="detailPanel"></section>
+  </main>
+
+  <script src="./assets/js/api.js?v=2"></script>
+  <script src="./assets/js/theme.js?v=2"></script>
+  <script src="./assets/js/search.js"></script>
+  <script src="./assets/js/ui.js"></script>
+  <script>
+    window.ThreatLensTheme.init();
+    window.ThreatLensSearch.init();
+    window.ThreatLensUI.init();
+  </script>
+</body>
+</html>

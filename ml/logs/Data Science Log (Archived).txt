@@ -1,0 +1,2065 @@
+Hackathon Deep Learning Project Orientation
+
+Cybersecurity Attacks & Defense: Real-world threat intel: IPs, domains, CVEs & OTX pulses
+Keywords: Real-world data, AI & ML ready, Multiple threat categories, Clean & labeled data, Future-proof security
+Dataset Introduction
+The dataset combines four complementary threat perspectives: OTX pulses for cyber threat intelligence narratives, CVE records for exploited vulnerabilities, malicious domains for phishing and C2 infrastructure, and malicious IPs for scanning, botnet, and exfiltration activity. 
+Name: Cybersecurity Threat Intelligence Dataset 2026
+Sources: Various websites (AlienVault OTX, CISA, and NVD)
+Preliminaries: Already performed data cleaning procedures
+What’s Inside:
+4,312 total records across 4 files:
+OTX Threat Intelligence - 2,365 records | Real threat pulses from AlienVault's global researcher network. Includes malware families, targeted countries, attack techniques, and adversary groups. Good for building threat classification models or studying APT behavior.
+CVE Vulnerabilities - 1,585 records | Actively exploited vulnerabilities from 2024 to 2026, sourced from CISA's KEV catalog and NVD. Each entry has CVSS scores, affected vendor/product, and patch status. Useful for vulnerability prioritization research.
+Malicious Domains - 162 record | Domains flagged for phishing, C2 activity, and malware distribution. Includes registrar info, country, and first/last seen dates.
+Malicious IPs - 200 records | IP addresses reported for scanning, brute force, botnet activity, and exfiltration. Includes ASN, country, and reputation scores.
+Last Updated: May 2026
+Contents:
+1_otx_threat_intel.csv 
+Pulse_ID: Unique identifier for each threat pulse
+Title: Name/title of the threat intelligence pulse
+Description: Detailed description of the threat
+Author: Security researcher who reported the threat
+Created: Date when pulse was first created
+Modified: Date when pulse was last updated
+TLP: Traffic Light Protocol (data sharing sensitivity)
+Tags: Associated threat categories and keywords
+Malware_Families: Malware variants linked to this threat
+Attack_IDs: MITRE ATT&CK technique identifiers
+Industries: Business sectors targeted by this threat
+Countries: Countries affected by this threat
+Indicators_Count: Number of threat indicators in pulse
+Subscribers: Number of OTX users following this pulse
+2_cve_vulnerabilities.csv
+cveID: Unique CVE identifier (e.g., CVE-2024-1234)
+vendorProject: Company or project affected
+product: Specific software or hardware affected
+vulnerabilityName: Common name of the vulnerability
+dateAdded: Date added to CISA KEV catalog
+shortDescription: Brief explanation of vulnerability
+requiredAction: Recommended remediation action
+dueDate: Deadline for patching per CISA guidelines
+knownRansomwareCampaignUse: Linked to ransomware or not
+cwes: Common Weakness Enumeration category
+3_malicious_domains.csv
+Domain: The malicious domain name
+TLD: Top-level domain (.com, .net, .xyz etc)
+Domain_Length: Character length of domain name
+Has_Numbers: Whether domain contains numbers
+Has_Hyphen: Whether domain contains hyphens
+Registrar: Company where domain was registered
+Creation_Date: When domain was first registered
+Last_Update_Date: Most recent WHOIS update date
+Reputation: Overall reputation score
+Malicious_Votes: Number of malicious reports
+Suspicious_Votes: Number of suspicious reports
+Harmless_Votes: Number of clean verdicts
+Undetected_Votes: Number of unscanned reports
+Total_Engines: Total security engines that analyzed it
+Threat_Severity: Severity level of threat (Low / Med / High)
+Categories: Type of malicious activity detected
+Popularity_Rank: Global traffic popularity ranking
+Last_Analysis_Date: Date of most recent security scan
+WHOIS_Summary: Domain registration information
+Data_Source: Source of this threat intelligence
+4_malicious_ips.csv
+IP: The malicious IP address
+Country: Country where IP is located
+Continent: Geographic continent of IP
+ASN: Autonomous System Number of network
+Owner: Organization owning this IP range
+Network: IP network/subnet range
+Malicious_Votes: Number of malicious reports
+Suspicious_Votes: Number of suspicious reports
+Harmless_Votes: Number of clean verdicts
+Undetected_Votes: Number of unscanned reports
+Total_Reports: Total number of threat reports
+Reputation_Score: Overall threat reputation score
+Threat_Label: Primary threat classification label
+Threat_Category: Category of malicious activity
+Regional_Registry: Internet registry (ARIN, RIPE etc)
+WHOIS_Summary: IP registration information
+TOR_Node: Whether IP is a TOR exit node
+Times_Submitted: How many times reported to feeds
+Last_Analysis_Date: Date of most recent security scan
+Threat_Severity: Severity level (Low / Medium / High)
+Related Works
+Discerning Reliable Cyber Threat Indicators for Timely Cyber Threat Intelligence (2023) - compares IoCs against threat-intelligence services including AlienVault OTX, MalwareBazaar, and VirusTotal, and evaluates accuracy, latency, and exclusiveness of indicators. This is a strong predecessor for the OTX pulse part of your dataset.
+A Risk Manager for Intrusion Tolerant Systems: Enhancing HAL 9000 with New Scoring and Data Sources (2025) - combines EPSS, CVSS, and AlienVault OTX pulses to rescore CVEs, explicitly treating pulse occurrences as evidence of active exploitation. This is one of the closest “fusion” works for your CVE + threat-intel side.
+VulZoo: A Comprehensive Vulnerability Intelligence Dataset (2024) - a vulnerability-intelligence dataset built around NVD, CISA KEV, CWE, CAPEC, ATT&CK, D3FEND, and AttackerKB, with utility scripts for synchronization and cleaning. This is a very strong related work for your CVE vulnerabilities file.
+Efficacy of EPSS in High Severity CVEs found in CISA KEV (2024) - studies whether EPSS can predict exploitation for vulnerabilities already known to be exploited, using the CISA KEV catalog as the reference set. Good support for vulnerability-prioritization framing.
+Vulnerability Management Chaining: An Integrated Framework for Efficient Cybersecurity Risk Prioritization (2025) - integrates KEV + EPSS + CVSS into a decision-tree framework and validates it on 28,377 vulnerabilities. This is a strong “successor” style work if you want to argue for multi-source vulnerability prioritization.
+From Past to Present: A Survey of Malicious URL Detection Techniques, Datasets and Code Repositories (2025) - surveys malicious URL detection from blacklists through Transformers, GNNs, and LLMs, and organizes the field by modality. This is a good umbrella citation for the malicious domain/URL branch of your dataset.
+DomURLs_BERT: Pre-trained BERT-based Model for Malicious Domains and URLs Detection and Classification (2024) - pretrains a BERT-style encoder on multilingual URLs, domain names, and DGA data, then evaluates phishing, malware, DGA, and DNS-tunneling tasks. This is one of the clearest deep-learning predecessors for your malicious domain file.
+Combining NLP and MLP for Enhanced Detection of Suspicious Domains (2024) - builds a real-life domain pipeline, enriches domain records with similarity and semantic/numeric features, and reports F1 84.86% and accuracy 84.95% on the SecReg dataset. This is especially relevant because your domain file also contains registration-time / WHOIS-like features.
+Phishing Detection Leveraging Machine Learning and External Features (2022) - explicitly uses external features such as IP reputation, domain reputation, and WHOIS registration information, while noting the cost of maintaining those external data sources. That maps very well to your malicious-domain schema.
+Detecting Malicious Domains Using Statistical Features (2022) - uses malicious domain lists such as DNS-BH and PhishTank and relies on DNS/IDN statistical features for classification. This is a classic baseline style related work for malicious-domain detection.
+AI-Driven Fast and Early Detection of IoT Botnet Threats (2024) - analyzes IoT network traffic with semi-supervised learning to detect stealth C2 communications, reporting strong results on IoT-23. This is relevant to your malicious IP file because it addresses botnet / command-and-control behavior at the network level.
+Comprehensive Botnet Detection by Mitigating Adversarial Attacks (2024) and ML Defender (aRGus NDR) (2026) - both are flow-based botnet/NIDS works; the former focuses on adversarial robustness, while the latter is an open-source embedded ML NIDS for botnet and anomalous traffic detection with real deployment emphasis. These are useful if you want to connect malicious IPs to network-behavior detection rather than pure reputation feeds.
+Proposal
+Problem Framing (5%)
+This project adheres to the problem of how to build a cybersecurity intelligence system that can learn from various real-life threat data sources and support automated threat categorization, vulnerability prioritization, and malicious infrastructure detection.
+The central challenge is not only classification, but also representation learning across heterogeneous cybersecurity data.
+Accordingly, the project aims to answer the following question: Can a machine learning pipeline effectively analyze various cybersecurity intelligence sources and produce useful threat insights to enhance security protection?
+To resolve this, the study will compare traditional machine learning methods with a Transformer-based deep learning component, evaluate their performance across the four datasets, and examine how feature engineering and model choice shapes the cybersecurers.
+In a nutshell, the project focuses on:
+Threat classification from OTX pulses,
+Exploitation-risk prioritization from CVE records
+Malicious domain detection
+Malicious IP classification
+Practical evaluation for a deployable cybersecurity analytics prototype.
+The emphasis is on data-driven threat intelligence modeling using cleaned, labeled, and real-world cybersecurity datasets.
+CSV Extraction, Initial Inspection, Data Wrangling & Exploratory Data Analysis (10 - 15%)
+Load datasets and verify structure - 1%
+Load all 4 CSV files
+Confirm encoding, delimiters, column names, and basic shape
+Standardize column naming only if needed
+Initial Inspection - 4%
+info() and describe() for each dataset
+Surface inspection:
+row/column count
+data type correctness
+obvious anomalies such as numeric values stored as objects
+Missing values summary
+Duplicate check
+Categorical columns check
+Cardinality check for important categorical fields
+Lightweight Engineering for EDA readiness - 2%
+Convert time columns where applicable
+Create only simple derived columns needed for understanding the data
+E.g: domain length already exists, so no extra heavy feature engineering here
+E.g: date parts such as year/month/day if useful for EDA
+Keep this limited to inspection-support features only
+Shallow visualisations (Use only compact, descriptive plots)  - 3%
+Distribution plots / count plots for key categorical fields
+Histogram or boxplot for key numeric fields
+Correlation heatmap for numeric variables
+Bar plot for top categories or labels
+Optional pairwise comparison only if it is light and informative
+Table relationship sanity check - 1%
+Check whether fields within each CSV are internally consistent
+Verify that identifiers, labels, and categories align with their descriptions
+Confirm no impossible values or broken date ranges
+EDA summary and modeling implications - 1%
+State the main patterns found
+State what this means for preprocessing and modeling
+Identify which columns are likely useful, risky, or redundant
+Preprocessing, Feature Engineering (25 - 30%)
+This stage prepares the four cybersecurity datasets for modeling by converting raw cleaned records into model-ready features:
+Schema harmonization: standardize column names, check data types, and align the structure of all four CSV files.
+Datetime conversion: convert time-related fields such as created, modified, due dates, and analysis dates into proper datetime format.
+Text preprocessing for OTX: clean threat text fields like titles, descriptions, tags, malware families, and ATT&CK IDs using lowercasing, punctuation cleanup, tokenization, and optional stopword removal.
+Categorical encoding: transform fields such as vendor, product, registrar, country, ASN, threat category, and severity using label encoding, one-hot encoding, or frequency-based encoding depending on the model.
+Numerical scaling and engineering: normalize numeric fields such as reputation scores, counts, subscribers, votes, and report totals; also derive useful ratios where needed.
+Security-specific feature engineering: create domain-relevant indicators such as domain length patterns, hyphen/number presence, WHOIS-based age features, TOR-node flags, exploitation-related CVE fields, and ATT&CK or malware-family references.
+Model-specific representation: use TF-IDF or character n-grams for classical ML text pipelines, and raw or lightly cleaned text for the Transformer-based OTX model.
+Missing data and duplicates handling: impute or fill missing values where necessary, replace empty text with neutral placeholders, and remove or consolidate duplicates.
+Final model-ready outputs: produce separate feature sets for OTX, CVE, malicious domains, and malicious IPs, each matched to its own modeling strategy.
+Modeling (25 - 30%)
+OTX → TF-IDF / char n-grams + Logistic Regression or Linear SVM | Deep Learning Approach: Transformer-based CTI text model (BERT / Transformer fine-tuning)
+CVE → Random Forest / XGBoost-style boosting, calibration or ranking metrics
+Domains/IPs → boosted trees on engineered features, with char n-grams as an optional add-on for domains
+Evaluation (15%)
+OTX threat intelligence task: Classification metrics such as accuracy, precision, recall, F1-score, and macro-averaged F1, especially when threat categories are imbalanced. Multi-label metrics such as micro-F1, macro-F1, Hamming loss, and subset accuracy may be used for multi-label outputs such as malware families, ATT&CK techniques, or threat tags.
+CVE prioritization task: In addition to standard classification metrics, ROC-AUC, PR-AUC, precision@k, recall@k, and calibration metrics are useful for measuring how well the model distinguishes high-risk vulnerabilities from lower-priority ones.
+Malicious domain and malicious IP tasks: Metrics such as precision, recall, F1-score, ROC-AUC, and confusion matrices can reveal how effectively the model identifies malicious infrastructure while limiting false alarms.
+Finally, to ensure a reliable comparison across methods, the evaluation should use a consistent validation strategy such as train-validation-test splitting or stratified cross-validation where feasible.
+Deployment (10 - 15%)
+Build the shell of the platform:
+A dashboard home with a global search bar
+A results page that shows an intel summary card, confidence/reputation score, tags, and source type
+A details drawer or page for one IOC / CVE / pulse entry
+A submit/search input that accepts IP, domain, CVE, or OTX pulse ID
+A dark/light mode toggle in the header
+		→ This gives the “VirusTotal-style” vibe.
+Recommended Architecture (Tech Stack):
+Front-end: Next.js + Tailwind + shadcn/ui 
+Back-end: FastAPI
+Database: PostgreSQL
+State: local UI state for search, filters, theme
+Deployment: frontend and backend separated, so the UI can evolve independently from the API
+Interpretation / Explainability (5 - 10%)
+For classical machine learning models, interpretation can be obtained using feature importance scores, permutation importance, or SHAP values. 
+For the OTX text model, explanation can be performed at the token or phrase level using techniques such as attention visualization, LIME, or SHAP for text.
+Timeline Implementation
+Data Initialized: Tuesday 12nd, 2026 - Thursday 14th, 2026
+Agenda:
+Day 1 - Web-based Application (Deployment Prototype)
+Day 2 - Data Understanding, EDA, Preprocessing Foundations, Feature Engineering and Model Building 
+Day 3 - Feature Engineering and Model Building (Contd w/ fine-tuning), Evaluation, Model Wire-up & Explainability
+References
+Dincy, R., Vinod, P., Rafidha, R., Andrea, D., Corrado, A., & Conti, M. (2025). Discerning reliable cyber threat indicators for timely cyber threat intelligence (arXiv:2306.16087). arXiv. https://doi.org/10.48550/arXiv.2306.16087
+Freitas, T., Novo, C., Dutra, I., Soares, J., Correia, M., Shariati, B., & Martins, R. (2025). A risk manager for intrusion tolerant systems: Enhancing HAL9000 with new scoring and data sources (arXiv:2508.13364). arXiv. https://doi.org/10.48550/arXiv.2508.13364
+Bonan, R., Jiahao, L., Weibo, Z., & Liang, Z. (2024). VulZoo: A comprehensive vulnerability intelligence dataset (arXiv:2406.16347v1). arXiv. https://arxiv.org/abs/2406.16347
+Patel, R. (2024). Efficacy of EPSS in high severity CVEs found in CISA KEV (arXiv:2411.02618v1). arXiv. https://arxiv.org/abs/2411.02618
+Sato, N. (2025). Vulnerability management chaining: An integrated framework for efficient cybersecurity risk prioritization (arXiv:2506.01220v1). arXiv. https://arxiv.org/abs/2506.01220
+Ye, T., Yanqui, Y., Jianguo, S., & Yanbin, W. (2025). From past to present: A survey of malicious URL detection techniques, datasets and code repositories (arXiv:2504.16449v2). arXiv. https://arxiv.org/abs/2504.16449v2
+Abdelkader, E., Salima, L., Meryem, J., Hamza, A., Zakaria, Y. & Ismail, B. (2024). DomURLs_BERT: Pre-trained BERT-based Model for Malicious Domains and URLs Detection and Classification (arXiv:2409.09143). arXiv. https://arxiv.org/abs/2409.09143v1
+Furkan, Ç., Mert ,İ., Hasan, D. & Reiner, C. (2024). SecureReg: Combining NLP and MLP for Enhanced Detection of Malicious Domain Name Registrations (arXiv:2401.03196). arXiv. https://arxiv.org/abs/2401.03196
+Dinil, M. & Adam, O. (2022). Phishing Detection Leveraging Machine Learning and Deep Learning: A Review (arXiv:2205.07411). arXiv. https://arxiv.org/abs/2205.07411v1
+Rahul, Y., Biju, I., Seibu, M. & Longzhi, Y. (2024). Comprehensive Botnet Detection by Mitigating Adversarial Attacks, Navigating the Subtleties of Perturbation Distances and Fortifying Predictions with Conformal Layers (arXiv:2409.00667). arXiv. https://arxiv.org/abs/2409.00667
+Abdelaziz, A., Aleddine, D. & Yacine, G. (2024). AI-Driven Fast and Early Detection of IoT Botnet Threats: A Comprehensive Network Traffic Analysis Approach (arXiv:2407.15688). arXiv. https://arxiv.org/abs/2407.15688v1
+Alshaima, A., Jawahir, M., Bayena, A., Arsiema, G. &  Monther, A. (2022). Detecting Malicious Domains Using Statistical Internationalized Domain Name Features in Top Level Domains (arXiv:2211.08020). arXiv. https://arxiv.org/abs/2211.08020
+
+
+III. Implementation
+
+1) 01_eda_and_inspection.ipynb
+
+<h2><center> 🛡️ 👾 Cybersecurity Attacks & Defense – Analytical Threat Intelligence System in a Modern Cyber Battlefield 🐛 🌐 </center></h2>
+
+<h4><center> From Raw Exchange To Security Insights: Machine - Deep Learning & Predictive Analytics & Real-World Protection </center></h4>
+
+# Import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import sys, re, ast, squarify
+from collections import Counter
+from pathlib import Path
+
+# Add project root to Python path
+PROJECT_ROOT = Path.cwd().parent
+sys.path.append(str(PROJECT_ROOT))
+
+# User configs
+from configs.paths import RAW_DIR, INTERIM_DIR, FIG_DIR
+from src.utils import standardize_columns, safe_to_datetime, normalize_text
+
+otx = pd.read_csv(RAW_DIR / "1_otx_threat_intel.csv")
+cve = pd.read_csv(RAW_DIR / "2_cve_vulnerabilities.csv")
+domains = pd.read_csv(RAW_DIR / "3_malicious_domains.csv")
+ips = pd.read_csv(RAW_DIR / "4_malicious_ips.csv")
+
+print("OTX shape:", otx.shape)
+print("CVE shape:", cve.shape)
+print("Domains shape:", domains.shape)
+print("IPs shape:", ips.shape)
+
+OTX shape: (2365, 14)
+CVE shape: (1585, 10)
+Domains shape: (162, 20)
+IPs shape: (200, 20)
+
+otx = standardize_columns(otx)
+cve = standardize_columns(cve)
+domains = standardize_columns(domains)
+ips = standardize_columns(ips)
+
+otx.columns, cve.columns, domains.columns, ips.columns
+
+(Index(['Pulse_ID', 'Title', 'Description', 'Author', 'Created', 'Modified',
+        'TLP', 'Tags', 'Malware_Families', 'Attack_IDs', 'Industries',
+        'Countries', 'Indicators_Count', 'Subscribers'],
+       dtype='str'),
+ Index(['cveID', 'vendorProject', 'product', 'vulnerabilityName', 'dateAdded',
+        'shortDescription', 'requiredAction', 'dueDate',
+        'knownRansomwareCampaignUse', 'cwes'],
+       dtype='str'),
+ Index(['Domain', 'TLD', 'Domain_Length', 'Has_Numbers', 'Has_Hyphen',
+        'Registrar', 'Creation_Date', 'Last_Update_Date', 'Reputation',
+        'Malicious_Votes', 'Suspicious_Votes', 'Harmless_Votes',
+        'Undetected_Votes', 'Total_Engines', 'Threat_Severity', 'Categories',
+        'Popularity_Rank', 'Last_Analysis_Date', 'WHOIS_Summary',
+        'Data_Source'],
+       dtype='str'),
+ Index(['IP', 'Country', 'Continent', 'ASN', 'Owner', 'Network',
+        'Malicious_Votes', 'Suspicious_Votes', 'Harmless_Votes',
+        'Undetected_Votes', 'Total_Reports', 'Reputation_Score', 'Threat_Label',
+        'Threat_Category', 'Regional_Registry', 'WHOIS_Summary', 'TOR_Node',
+        'Times_Submitted', 'Last_Analysis_Date', 'Threat_Severity'],
+       dtype='str'))
+
+def inspect_df(df, name):
+    print(f"\n========================= {name} =========================")
+    display(df.head(3))
+    print(df.info())
+    display(df.describe(include = "all").T)
+    print("Missing values:\n", df.isna().sum().sort_values(ascending = False).head(10))
+    print("Duplicates:", df.duplicated().sum())
+
+inspect_df(otx, "OTX")
+inspect_df(cve, "CVE")
+inspect_df(domains, "Domains")
+inspect_df(ips, "IPs")
+
+Pulse_ID	Title	Description	Author	Created	Modified	TLP	Tags	Malware_Families	Attack_IDs	Industries	Countries	Indicators_Count	Subscribers
+0	69f1e236e4e192f639298d53	Multi-Stage Malware Execution Chain Analysis	A sophisticated multi-stage malware execution ...	AlienVault	2026-04-29T10:49:26.327000	2026-04-29T10:50:57.999000	white	payload extraction, c2 communication, defense ...	Unknown	T1036.005, T1082, T1071, T1140, T1036, T1055, ...	Unknown	Unknown	0.0	0.0
+1	69f1de85544538ce8b03332a	User interaction with a ClickFix-style phishin...	A ClickFix-style phishing campaign leveraged s...	AlienVault	2026-04-29T10:33:41.967000	2026-04-29T10:44:36.742000	white	phishing, lumma stealer, powershell, informati...	HijackLoader, Lumma Stealer - S1213, LummaStealer	T1218.007, T1005, T1555, T1036, T1055, T1059, ...	Unknown	Unknown	0.0	0.0
+2	69f1d20216d6091f01f8a6eb	Kyber ransomware is not just post-quantum name...	A detailed technical analysis confirms that Ky...	AlienVault	2026-04-29T09:40:17.996000	2026-04-29T10:14:38.724000	white	post-quantum cryptography, x25519, aes-ctr enc...	Kyber	T1489, T1135, T1082, T1112, T1070.001, T1222, ...	Defense, Technology	United States of America	0.0	0.0
+
+<class 'pandas.DataFrame'>
+RangeIndex: 2365 entries, 0 to 2364
+Data columns (total 14 columns):
+ #   Column            Non-Null Count  Dtype  
+---  ------            --------------  -----  
+ 0   Pulse_ID          2365 non-null   str    
+ 1   Title             2365 non-null   str    
+ 2   Description       2364 non-null   str    
+ 3   Author            2365 non-null   str    
+ 4   Created           2365 non-null   str    
+ 5   Modified          2365 non-null   str    
+ 6   TLP               2365 non-null   str    
+ 7   Tags              2365 non-null   str    
+ 8   Malware_Families  2365 non-null   str    
+ 9   Attack_IDs        2365 non-null   str    
+ 10  Industries        2365 non-null   str    
+ 11  Countries         2365 non-null   str    
+ 12  Indicators_Count  2365 non-null   float64
+ 13  Subscribers       2365 non-null   float64
+dtypes: float64(2), str(12)
+memory usage: 1.9 MB
+None
+
+count	unique	top	freq	mean	std	min	25%	50%	75%	max
+Pulse_ID	2365	2340	69f1e236e4e192f639298d53	2	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Title	2365	2286	Multi-Stage Malware Execution Chain Analysis	2	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Description	2364	2361	These indicators of compromise (IOCs) were ide...	3	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Author	2365	1	AlienVault	2365	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Created	2365	2340	2026-04-29T10:49:26.327000	2	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Modified	2365	2085	2025-01-06T23:11:01.995000	9	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+TLP	2365	2	white	2362	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Tags	2365	2329	Unknown	12	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Malware_Families	2365	1457	Unknown	656	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Attack_IDs	2365	2129	Unknown	189	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Industries	2365	470	Unknown	1229	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Countries	2365	530	Unknown	1306	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Indicators_Count	2365.0	NaN	NaN	NaN	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+Subscribers	2365.0	NaN	NaN	NaN	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+
+Missing values:
+ Description         1
+Pulse_ID            0
+Title               0
+Author              0
+Created             0
+Modified            0
+TLP                 0
+Tags                0
+Malware_Families    0
+Attack_IDs          0
+dtype: int64
+Duplicates: 0
+
+========================= CVE =========================
+cveID	vendorProject	product	vulnerabilityName	dateAdded	shortDescription	requiredAction	dueDate	knownRansomwareCampaignUse	cwes
+0	CVE-2024-1708	ConnectWise	ScreenConnect	ConnectWise ScreenConnect Path Traversal Vulne...	2026-04-28	ConnectWise ScreenConnect contains a path trav...	Apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	CWE-22
+1	CVE-2026-32202	Microsoft	Windows	Microsoft Windows Protection Mechanism Failure...	2026-04-28	Microsoft Windows Shell contains a protection ...	Apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	CWE-693
+2	CVE-2025-29635	D-Link	DIR-823X	D-Link DIR-823X Command Injection Vulnerability	2026-04-24	D-Link DIR-823X contains a command injection v...	Apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	CWE-77
+
+<class 'pandas.DataFrame'>
+RangeIndex: 1585 entries, 0 to 1584
+Data columns (total 10 columns):
+ #   Column                      Non-Null Count  Dtype
+---  ------                      --------------  -----
+ 0   cveID                       1585 non-null   str  
+ 1   vendorProject               1585 non-null   str  
+ 2   product                     1585 non-null   str  
+ 3   vulnerabilityName           1585 non-null   str  
+ 4   dateAdded                   1585 non-null   str  
+ 5   shortDescription            1585 non-null   str  
+ 6   requiredAction              1585 non-null   str  
+ 7   dueDate                     1585 non-null   str  
+ 8   knownRansomwareCampaignUse  1585 non-null   str  
+ 9   cwes                        1585 non-null   str  
+dtypes: str(10)
+memory usage: 760.2 KB
+None
+
+count	unique	top	freq
+cveID	1585	1585	CVE-2024-1708	1
+vendorProject	1585	258	Microsoft	370
+product	1585	642	Windows	169
+vulnerabilityName	1585	1257	Microsoft Win32k Privilege Escalation Vulnerab...	23
+dateAdded	1585	410	2021-11-03	287
+shortDescription	1585	1498	Google Chromium V8 Engine contains a type conf...	9
+requiredAction	1585	42	Apply updates per vendor instructions.	893
+dueDate	1585	424	2022-05-03	189
+knownRansomwareCampaignUse	1585	2	Unknown	1268
+cwes	1585	228	Unknown	167
+
+Missing values:
+ cveID                         0
+vendorProject                 0
+product                       0
+vulnerabilityName             0
+dateAdded                     0
+shortDescription              0
+requiredAction                0
+dueDate                       0
+knownRansomwareCampaignUse    0
+cwes                          0
+dtype: int64
+Duplicates: 0
+
+========================= Domains =========================
+Domain	TLD	Domain_Length	Has_Numbers	Has_Hyphen	Registrar	Creation_Date	Last_Update_Date	Reputation	Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	Total_Engines	Threat_Severity	Categories	Popularity_Rank	Last_Analysis_Date	WHOIS_Summary	Data_Source
+0	urlhaus.abuse.ch	ch	16	No	No	Unknown	Unknown	Unknown	2	0	0	59	32	91	Low	{}	Unknown	1777636885.0	DNSSEC:Y	VirusTotal
+1	bazaar.abuse.ch	ch	15	No	No	Unknown	Unknown	Unknown	6	1	0	58	32	91	Low	{}	Unknown	1777636949.0	DNSSEC:Y	VirusTotal
+2	feodotracker.abuse.ch	ch	21	No	No	Unknown	Unknown	Unknown	1	0	0	59	32	91	Low	{}	Unknown	1777627712.0	DNSSEC:Y	VirusTotal
+
+<class 'pandas.DataFrame'>
+RangeIndex: 162 entries, 0 to 161
+Data columns (total 20 columns):
+ #   Column              Non-Null Count  Dtype
+---  ------              --------------  -----
+ 0   Domain              162 non-null    str  
+ 1   TLD                 162 non-null    str  
+ 2   Domain_Length       162 non-null    int64
+ 3   Has_Numbers         162 non-null    str  
+ 4   Has_Hyphen          162 non-null    str  
+ 5   Registrar           162 non-null    str  
+ 6   Creation_Date       162 non-null    str  
+ 7   Last_Update_Date    162 non-null    str  
+ 8   Reputation          162 non-null    int64
+ 9   Malicious_Votes     162 non-null    int64
+ 10  Suspicious_Votes    162 non-null    int64
+ 11  Harmless_Votes      162 non-null    int64
+ 12  Undetected_Votes    162 non-null    int64
+ 13  Total_Engines       162 non-null    int64
+ 14  Threat_Severity     162 non-null    str  
+ 15  Categories          162 non-null    str  
+ 16  Popularity_Rank     162 non-null    str  
+ 17  Last_Analysis_Date  162 non-null    str  
+ 18  WHOIS_Summary       162 non-null    str  
+ 19  Data_Source         162 non-null    str  
+dtypes: int64(7), str(13)
+memory usage: 56.2 KB
+None
+
+count	unique	top	freq	mean	std	min	25%	50%	75%	max
+Domain	162	162	urlhaus.abuse.ch	1	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+TLD	162	24	com	59	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Domain_Length	162.0	NaN	NaN	NaN	15.820988	4.748199	6.0	12.0	16.0	19.0	28.0
+Has_Numbers	162	2	No	155	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Has_Hyphen	162	2	Yes	87	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Registrar	162	53	Unknown	72	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Creation_Date	162	129	Unknown	33	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Last_Update_Date	162	127	Unknown	34	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Reputation	162.0	NaN	NaN	NaN	0.654321	13.143886	-47.0	0.0	0.0	0.0	140.0
+Malicious_Votes	162.0	NaN	NaN	NaN	1.308642	3.34048	0.0	0.0	0.0	1.0	17.0
+Suspicious_Votes	162.0	NaN	NaN	NaN	0.228395	0.489323	0.0	0.0	0.0	0.0	3.0
+Harmless_Votes	162.0	NaN	NaN	NaN	43.209877	23.030747	0.0	46.0	55.0	57.0	61.0
+Undetected_Votes	162.0	NaN	NaN	NaN	46.253086	23.698759	29.0	33.0	34.0	41.75	91.0
+Total_Engines	162.0	NaN	NaN	NaN	91.0	0.0	91.0	91.0	91.0	91.0	91.0
+Threat_Severity	162	3	Low	145	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Categories	162	29	{}	134	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Popularity_Rank	162	75	Unknown	88	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Last_Analysis_Date	162	157	Unknown	4	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+WHOIS_Summary	162	123	Unknown	20	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Data_Source	162	1	VirusTotal	162	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+
+Missing values:
+ Domain              0
+TLD                 0
+Domain_Length       0
+Has_Numbers         0
+Has_Hyphen          0
+Registrar           0
+Creation_Date       0
+Last_Update_Date    0
+Reputation          0
+Malicious_Votes     0
+dtype: int64
+Duplicates: 0
+
+========================= IPs =========================
+
+IP	Country	Continent	ASN	Owner	Network	Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	Total_Reports	Reputation_Score	Threat_Label	Threat_Category	Regional_Registry	WHOIS_Summary	TOR_Node	Times_Submitted	Last_Analysis_Date	Threat_Severity
+0	176.10.99.200	CH	EU	51395.0	Datasource AG	176.10.96.0/19	3	0	55	33	91	-26	clean	clean	RIPE NCC	inetnum: 176.10.99.192 - 176.10.99.223\nnetnam...	No	0	1777589108	Low
+1	176.10.99.201	CH	EU	51395.0	Datasource AG	176.10.96.0/19	0	1	53	37	91	0	unrated	clean	RIPE NCC	inetnum: 176.10.99.192 - 176.10.99.223\nnetnam...	No	0	1776571431	Low
+2	77.247.181.162	NL	EU	43350.0	NForce Entertainment B.V.	77.247.176.0/21	4	1	53	33	91	-19	unrated	clean	RIPE NCC	inetnum: 77.247.181.160 - 77.247.181.175\nnetn...	No	0	1777589035	Medium
+
+<class 'pandas.DataFrame'>
+RangeIndex: 200 entries, 0 to 199
+Data columns (total 20 columns):
+ #   Column              Non-Null Count  Dtype
+---  ------              --------------  -----
+ 0   IP                  200 non-null    str  
+ 1   Country             200 non-null    str  
+ 2   Continent           200 non-null    str  
+ 3   ASN                 200 non-null    str  
+ 4   Owner               200 non-null    str  
+ 5   Network             200 non-null    str  
+ 6   Malicious_Votes     200 non-null    int64
+ 7   Suspicious_Votes    200 non-null    int64
+ 8   Harmless_Votes      200 non-null    int64
+ 9   Undetected_Votes    200 non-null    int64
+ 10  Total_Reports       200 non-null    int64
+ 11  Reputation_Score    200 non-null    int64
+ 12  Threat_Label        200 non-null    str  
+ 13  Threat_Category     200 non-null    str  
+ 14  Regional_Registry   200 non-null    str  
+ 15  WHOIS_Summary       200 non-null    str  
+ 16  TOR_Node            200 non-null    str  
+ 17  Times_Submitted     200 non-null    int64
+ 18  Last_Analysis_Date  200 non-null    int64
+ 19  Threat_Severity     200 non-null    str  
+dtypes: int64(8), str(12)
+memory usage: 64.6 KB
+None
+
+	count	unique	top	freq	mean	std	min	25%	50%	75%	max
+IP	200	200	176.10.99.200	1	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Country	200	24	DE	30	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Continent	200	4	EU	124	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+ASN	200	31	12876.0	20	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Owner	200	30	Scaleway SAS	20	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Network	200	53	Unknown	17	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Malicious_Votes	200.0	NaN	NaN	NaN	1.5	3.692992	0.0	0.0	0.0	1.0	21.0
+Suspicious_Votes	200.0	NaN	NaN	NaN	0.295	0.742111	0.0	0.0	0.0	0.0	4.0
+Harmless_Votes	200.0	NaN	NaN	NaN	24.285	26.276148	0.0	0.0	0.0	54.0	58.0
+Undetected_Votes	200.0	NaN	NaN	NaN	64.92	28.099493	28.0	35.0	91.0	91.0	91.0
+Total_Reports	200.0	NaN	NaN	NaN	91.0	0.0	91.0	91.0	91.0	91.0	91.0
+Reputation_Score	200.0	NaN	NaN	NaN	-2.02	8.546038	-85.0	0.0	0.0	0.0	1.0
+Threat_Label	200	3	unrated	189	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Threat_Category	200	3	unrated	107	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Regional_Registry	200	5	RIPE NCC	128	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+WHOIS_Summary	200	83	Unknown	22	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+TOR_Node	200	2	No	189	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+Times_Submitted	200.0	NaN	NaN	NaN	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+Last_Analysis_Date	200.0	NaN	NaN	NaN	1736216732.77	58625253.739298	1545832941.0	1713342533.0	1770847999.5	1777351395.75	1777632250.0
+Threat_Severity	200	3	Low	174	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+
+Missing values:
+ IP                  0
+Country             0
+Continent           0
+ASN                 0
+Owner               0
+Network             0
+Malicious_Votes     0
+Suspicious_Votes    0
+Harmless_Votes      0
+Undetected_Votes    0
+dtype: int64
+Duplicates: 0
+
+2) 02_preprocessing_and_feature_engineering.ipynb
+
+# Import libraries
+import pandas as pd
+import numpy as np
+import sys
+from pathlib import Path
+from sklearn.model_selection import train_test_split
+from collections import Counter
+
+# Add project root to Python path
+PROJECT_ROOT = Path.cwd().parent
+sys.path.append(str(PROJECT_ROOT))
+
+from src.utils import normalize_text, safe_ratio, make_hashable, split_multi_value, truncate_tags
+
+# User configs
+from configs.paths import INTERIM_DIR, PROCESSED_DIR, SPLITS_DIR
+
+otx = pd.read_parquet(INTERIM_DIR / "otx_inspected.parquet")
+cve = pd.read_parquet(INTERIM_DIR / "cve_inspected.parquet")
+domains = pd.read_parquet(INTERIM_DIR / "domains_inspected.parquet")
+ips = pd.read_parquet(INTERIM_DIR / "ips_inspected.parquet")
+
+# OTX Pipeline
+# Configs
+MIN_ATTACK_FREQ = 15        # Remove noise
+MAX_TAGS_LEN = 30           # Prevent metadata dominance
+
+def collapse_attack_id(attack_id: str) -> str:
+    return attack_id.split(".")[0]
+
+def preprocess_otx(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    # Text normalization
+    text_cols = ["Title", "Description", "Tags", "Malware_Families", "Industries", "Countries"]
+    for col in text_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna("").map(normalize_text)
+
+    # Numeric cleanup
+    df["Indicators_Count"] = (pd.to_numeric(df.get("Indicators_Count"), errors="coerce").fillna(0).clip(0, 10000))
+    df["Subscribers"] = (pd.to_numeric(df.get("Subscribers"), errors="coerce").fillna(0).clip(0, 100000))
+
+    # Log transform helps small datasets
+    df["log_indicators"] = np.log1p(df["Indicators_Count"])
+    df["log_subscribers"] = np.log1p(df["Subscribers"])
+
+    # Time feature
+    df["pulse_age_days"] = ((df["Modified"] - df["Created"]).dt.days.fillna(0).clip(lower=0))
+    df["log_pulse_age"] = np.log1p(df["pulse_age_days"])
+
+    # ATT&CK multi-label
+    df["Attack_List"] = df["Attack_IDs"].apply(split_multi_value)
+    df["Attack_List"] = df["Attack_List"].apply(lambda x: [collapse_attack_id(i) for i in x])
+
+    # Filter rare labels
+    counter = Counter(l for row in df["Attack_List"] for l in row)
+
+    valid_labels = {k for k, v in counter.items() if v >= MIN_ATTACK_FREQ}
+
+    df["Attack_List"] = df["Attack_List"].apply(lambda x: [i for i in x if i in valid_labels])
+
+    # Remove empty rows
+    df = df[df["Attack_List"].map(len) > 0].reset_index(drop=True)
+
+    df["combined_text"] = (
+        df["Title"] + " " +
+        df["Description"] + " " +
+        df["Tags"] + " " +
+        df["Malware_Families"] + " " +
+        df["Industries"] + " " +
+        df["Countries"]
+    ).str.replace(r"\s+", " ", regex=True).str.strip()
+
+    df = df.drop_duplicates(subset=["combined_text", "Attack_List"])
+
+    return df
+
+otx_p = preprocess_otx(otx)
+
+# Remove redundant features
+otx = otx.drop(columns=["Countries"])
+otx_p
+
+Pulse_ID	Title	Description	Author	Created	Modified	TLP	Tags	Malware_Families	Attack_IDs	...	Subscribers	Created_year	Created_month	Created_day	log_indicators	log_subscribers	pulse_age_days	log_pulse_age	Attack_List	combined_text
+0	69f1e236e4e192f639298d53	multi-stage malware execution chain analysis	a sophisticated multi-stage malware execution ...	AlienVault	2026-04-29 10:49:26.327	2026-04-29 10:50:57.999	white	payload extraction, c2 communication, defense ...	unknown	T1036.005, T1082, T1071, T1140, T1036, T1055, ...	...	0.0	2026.0	4.0	29.0	0.0	0.0	0.0	0.000000	(T1036, T1082, T1071, T1140, T1036, T1055, T10...	multi-stage malware execution chain analysis a...
+1	69f1de85544538ce8b03332a	user interaction with a clickfix-style phishin...	a clickfix-style phishing campaign leveraged s...	AlienVault	2026-04-29 10:33:41.967	2026-04-29 10:44:36.742	white	phishing, lumma stealer, powershell, informati...	hijackloader, lumma stealer - s1213, lummastealer	T1218.007, T1005, T1555, T1036, T1055, T1059, ...	...	0.0	2026.0	4.0	29.0	0.0	0.0	0.0	0.000000	(T1218, T1005, T1555, T1036, T1055, T1059, T12...	user interaction with a clickfix-style phishin...
+2	69f1d20216d6091f01f8a6eb	kyber ransomware is not just post-quantum name...	a detailed technical analysis confirms that ky...	AlienVault	2026-04-29 09:40:17.996	2026-04-29 10:14:38.724	white	post-quantum cryptography, x25519, aes-ctr enc...	kyber	T1489, T1135, T1082, T1112, T1070.001, T1222, ...	...	0.0	2026.0	4.0	29.0	0.0	0.0	0.0	0.000000	(T1489, T1135, T1082, T1112, T1070, T1222, T10...	kyber ransomware is not just post-quantum name...
+
+otx_p.describe()
+Created	Modified	Indicators_Count	Subscribers	Created_year	Created_month	Created_day	log_indicators	log_subscribers	pulse_age_days	log_pulse_age
+count	2353	2353	2354.0	2354.0	2353.000000	2353.000000	2353.000000	2354.0	2354.0	2354.000000	2354.000000
+mean	2025-06-20 22:03:28.683083776	2025-07-16 14:10:03.522304768	0.0	0.0	2024.969826	6.492563	16.065023	0.0	0.0	25.029312	1.709687
+min	2015-01-19 18:20:52.140000	2024-09-04 08:03:43.335000	0.0	0.0	2015.000000	1.000000	1.000000	0.0	0.0	0.000000	0.000000
+25%	2025-01-31 09:50:48.000999936	2025-02-21 09:01:55.753999872	0.0	0.0	2025.000000	3.000000	9.000000	0.0	0.0	0.000000	0.000000
+50%	2025-06-26 17:27:51.777999872	2025-07-16 19:07:42.348999936	0.0	0.0	2025.000000	7.000000	16.000000	0.0	0.0	2.000000	1.098612
+75%	2025-11-26 19:11:17.732000	2025-12-10 14:25:46.976000	0.0	0.0	2025.000000	10.000000	23.000000	0.0	0.0	29.000000	3.401197
+max	2026-04-29 10:49:26.327000	2026-04-29 18:04:13.405000	0.0	0.0	2026.000000	12.000000	31.000000	0.0	0.0	3802.000000	8.243546
+std	NaN	NaN	0.0	0.0	0.754481	3.586049	8.607045	0.0	0.0	142.303464	1.746793
+
+# CVE Pipeline
+def preprocess_cve(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    # Text cleanup
+    text_cols = ["vulnerabilityName", "shortDescription", "requiredAction"]
+
+    for col in text_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna("").map(normalize_text)
+
+    # Categorical cleanup
+    cat_cols = ["vendorProject", "product", "cwes"]
+
+    for col in cat_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna("").astype(str).str.lower().str.strip()
+
+    # Datetime
+    df["dateAdded"] = pd.to_datetime(df["dateAdded"], errors="coerce")
+    df["dueDate"] = pd.to_datetime(df["dueDate"], errors="coerce")
+
+    df["days_to_due"] = (df["dueDate"] - df["dateAdded"]).dt.days
+    df["days_to_due"] = df["days_to_due"].clip(-1, 3650)
+
+    df["log_days_to_due"] = np.log1p(df["days_to_due"].clip(lower=0))
+
+    # Text field (Lower Noise Design)
+    df["risk_text"] = (df["vulnerabilityName"] + " " + df["shortDescription"] + " " + df["cwes"]).str.strip()
+
+    # Structured meta field
+    df["meta_text"] = (df["vendorProject"] + " " + df["product"]).str.strip()
+
+    return df
+
+cve_p = preprocess_cve(cve)
+
+cveID	vendorProject	product	vulnerabilityName	dateAdded	shortDescription	requiredAction	dueDate	knownRansomwareCampaignUse	cwes	dateAdded_year	dateAdded_month	dateAdded_day	cwe_list	days_to_due	log_days_to_due	risk_text	meta_text
+0	CVE-2024-1708	connectwise	screenconnect	connectwise screenconnect path traversal vulne...	2026-04-28	connectwise screenconnect contains a path trav...	apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	cwe-22	2026	4	28	[CWE-22]	14	2.708050	connectwise screenconnect path traversal vulne...	connectwise screenconnect
+1	CVE-2026-32202	microsoft	windows	microsoft windows protection mechanism failure...	2026-04-28	microsoft windows shell contains a protection ...	apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	cwe-693	2026	4	28	[CWE-693]	14	2.708050	microsoft windows protection mechanism failure...	microsoft windows
+2	CVE-2025-29635	d-link	dir-823x	d-link dir-823x command injection vulnerability	2026-04-24	d-link dir-823x contains a command injection v...	apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	cwe-77	2026	4	24	[CWE-77]	14	2.708050	d-link dir-823x command injection vulnerabilit...	d-link dir-823x
+3	CVE-2024-7399	samsung	magicinfo 9 server	samsung magicinfo 9 server path traversal vuln...	2026-04-24	samsung magicinfo 9 server contains a path tra...	apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	cwe-22, cwe-434	2026	4	24	[CWE-22, CWE-434]	14	2.708050	samsung magicinfo 9 server path traversal vuln...	samsung magicinfo 9 server
+4	CVE-2024-57728	simplehelp	simplehelp	simplehelp path traversal vulnerability	2026-04-24	simplehelp contains a path traversal vulnerabi...	apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	cwe-22	2026	4	24	[CWE-22]	14	2.708050	simplehelp path traversal vulnerability simple...	simplehelp simplehelp
+
+# Domain Pipeline
+def preprocess_domains(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    # Numeric
+    numeric_cols = [
+        "Domain_Length", "Reputation", "Malicious_Votes",
+        "Suspicious_Votes", "Harmless_Votes", "Undetected_Votes",
+        "Total_Engines"
+    ]
+    for col in numeric_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+    # Date fix
+    df["Creation_Date"] = pd.to_datetime(df["Creation_Date"], errors="coerce")
+    df["Last_Analysis_Date"] = pd.to_datetime(df["Last_Analysis_Date"], errors="coerce")
+
+    df["domain_age_days"] = (
+        df["Last_Analysis_Date"] - df["Creation_Date"]
+    ).dt.days.fillna(0).clip(lower=0)
+
+    df["log_domain_age"] = np.log1p(df["domain_age_days"])
+
+    # Engineered binary flags
+    df["Has_Numbers"] = df["Domain"].str.contains(r"\d", na=False).astype(int)
+    df["Has_Hyphen"] = df["Domain"].str.contains(r"-", na=False).astype(int)
+
+    # Ratios
+    df["malicious_ratio"] = safe_ratio(df["Malicious_Votes"], df["Total_Engines"])
+    df["suspicious_ratio"] = safe_ratio(df["Suspicious_Votes"], df["Total_Engines"])
+
+    # Log counts
+    df["log_malicious"] = np.log1p(df["Malicious_Votes"])
+    df["log_suspicious"] = np.log1p(df["Suspicious_Votes"])
+
+    # Categorical cleaning
+    df["TLD"] = df["TLD"].str.lower().fillna("unknown")
+
+    return df
+
+domains_p = preprocess_domains(domains)
+
+Domain	TLD	Domain_Length	Has_Numbers	Has_Hyphen	Registrar	Creation_Date	Last_Update_Date	Reputation	Malicious_Votes	...	Data_Source	Creation_Date_year	Creation_Date_month	Creation_Date_day	domain_age_days	log_domain_age	malicious_ratio	suspicious_ratio	log_malicious	log_suspicious
+0	urlhaus.abuse.ch	ch	16	0	0	Unknown	NaT	NaT	2	0	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.000000	0.000000	0.000000	0.000000
+1	bazaar.abuse.ch	ch	15	0	0	Unknown	NaT	NaT	6	1	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.010989	0.000000	0.693147	0.000000
+2	feodotracker.abuse.ch	ch	21	0	0	Unknown	NaT	NaT	1	0	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.000000	0.000000	0.000000	0.000000
+3	sslbl.abuse.ch	ch	14	0	0	Unknown	NaT	NaT	0	0	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.000000	0.000000	0.000000	0.000000
+4	threatfox.abuse.ch	ch	18	0	0	Unknown	NaT	NaT	0	0	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.000000	0.000000	0.000000	0.000000
+...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...
+157	adobe-update.com	com	16	0	1	GMO Internet Group, Inc. d/b/a Onamae.com	2024-10-05 09:08:21	2025-10-06 07:36:49	0	6	...	VirusTotal	2024.0	10.0	5.0	565.0	6.338594	0.065934	0.010989	1.945910	0.693147
+158	windows-update.net	net	18	0	1	NameSilo, LLC	2025-02-18 06:35:04	2026-02-10 09:31:00	0	0	...	VirusTotal	2025.0	2.0	18.0	433.0	6.073045	0.000000	0.000000	0.000000	0.000000
+159	antivirus-update.org	org	20	0	1	Unknown	NaT	NaT	0	0	...	VirusTotal	NaN	NaN	NaN	0.0	0.000000	0.000000	0.000000	0.000000	0.000000
+160	driver-update.net	net	17	0	1	GoDaddy.com, LLC	2008-05-11 17:39:20	2023-04-24 21:44:23	0	0	...	VirusTotal	2008.0	5.0	11.0	6554.0	8.787983	0.000000	0.000000	0.000000	0.000000
+161	media-player-update.com	com	23	0	1	PSI-USA, INC. DBA DOMAIN ROBOT	2013-10-26 00:00:00	2015-10-27 00:00:00	0	0	...	VirusTotal	2013.0	10.0	26.0	1967.0	7.584773	0.000000	0.000000	0.000000	0.000000
+
+# IP Pipeline
+def preprocess_ips(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    # Text
+    text_cols = [
+        "Country", "Continent", "Owner", "Network",
+        "Threat_Label", "Threat_Category",
+        "Regional_Registry", "WHOIS_Summary"
+    ]
+
+    for col in text_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna("").map(normalize_text)
+
+    # Numeric
+    numeric_cols = [
+        "Malicious_Votes", "Suspicious_Votes",
+        "Harmless_Votes", "Undetected_Votes",
+        "Total_Reports", "Reputation_Score", "Times_Submitted"
+    ]
+
+    for col in numeric_cols:
+        df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+    # ASN as categorical
+    df["ASN"] = df["ASN"].astype(str).fillna("unknown")
+
+    # Ratios
+    df["malicious_ratio"] = safe_ratio(df["Malicious_Votes"], df["Total_Reports"])
+    df["suspicious_ratio"] = safe_ratio(df["Suspicious_Votes"], df["Total_Reports"])
+
+    # Log features
+    df["log_malicious"] = np.log1p(df["Malicious_Votes"])
+    df["log_suspicious"] = np.log1p(df["Suspicious_Votes"])
+    df["log_harmless"] = np.log1p(df["Harmless_Votes"])
+    df["log_undetected"] = np.log1p(df["Undetected_Votes"])
+
+    # Safer reputation scaling
+    min_val = df["Reputation_Score"].min()
+    max_val = df["Reputation_Score"].max()
+
+    df["reputation_score_scaled"] = (
+        (df["Reputation_Score"] - min_val) /
+        (max_val - min_val + 1e-9)
+    )
+
+    # TOR flag robustness
+    df["tor_flag"] = df["TOR_Node"].astype(str).str.lower().isin(
+        ["1", "true", "yes"]
+    ).astype(int)
+
+    # IP structure feature
+    df["ip_first_octet"] = df["IP"].astype(str).str.split(".").str[0]
+
+    return df
+
+ips_p = preprocess_ips(ips)
+
+IP	Country	Continent	ASN	Owner	Network	Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	...	Last_Analysis_Date_day	malicious_ratio	suspicious_ratio	log_malicious	log_suspicious	log_harmless	log_undetected	reputation_score_scaled	tor_flag	ip_first_octet
+0	176.10.99.200	ch	eu	51395.0	datasource ag	176.10.96.0/19	3	0	55	33	...	30	0.032967	0.000000	1.386294	0.000000	4.025352	3.526361	0.686047	0	176
+1	176.10.99.201	ch	eu	51395.0	datasource ag	176.10.96.0/19	0	1	53	37	...	19	0.000000	0.010989	0.000000	0.693147	3.988984	3.637586	0.988372	0	176
+2	77.247.181.162	nl	eu	43350.0	nforce entertainment b.v.	77.247.176.0/21	4	1	53	33	...	30	0.043956	0.010989	1.609438	0.693147	3.988984	3.526361	0.767442	0	77
+3	77.247.181.163	nl	eu	43350.0	nforce entertainment b.v.	77.247.176.0/21	2	2	55	32	...	30	0.021978	0.021978	1.098612	1.098612	4.025352	3.496508	0.802326	0	77
+4	199.87.154.255	ca	unknown	18451.0	les.net	199.87.152.0/21	2	0	54	35	...	30	0.021978	0.000000	1.098612	0.000000	4.007333	3.583519	0.976744	0	199
+...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...
+195	45.142.122.103	vg	unknown	205090.0	first server limited	45.142.122.0/24	0	0	0	91	...	12	0.000000	0.000000	0.000000	0.000000	0.000000	4.521789	0.988372	0	45
+196	194.40.243.100	ua	eu	48693.0	rices privately owned enterprise	194.40.243.0/24	1	0	53	37	...	5	0.010989	0.000000	0.693147	0.000000	3.988984	3.637586	0.988372	0	194
+197	194.40.243.101	ua	eu	48693.0	rices privately owned enterprise	194.40.243.0/24	0	0	54	37	...	7	0.000000	0.000000	0.000000	0.000000	4.007333	3.637586	0.988372	0	194
+198	194.40.243.102	ua	eu	48693.0	rices privately owned enterprise	194.40.243.0/24	0	0	0	91	...	29	0.000000	0.000000	0.000000	0.000000	0.000000	4.521789	0.988372	0	194
+
+# Final Cleanup
+def finalize_df(df):
+
+    df = df.copy()
+
+    obj_cols = df.select_dtypes(include=["object", "string"]).columns
+    
+    for col in obj_cols:
+        df[col] = df[col].map(make_hashable)
+
+    df = df.drop_duplicates()
+
+    for col in obj_cols:
+        df[col] = df[col].fillna("")
+
+    return df
+
+otx_p = finalize_df(otx_p)
+cve_p = finalize_df(cve_p)
+domains_p = finalize_df(domains_p)
+ips_p = finalize_df(ips_p)
+
+# Savestates
+otx_p.to_parquet(PROCESSED_DIR / "otx_processed.parquet", index=False)
+cve_p.to_parquet(PROCESSED_DIR / "cve_processed.parquet", index=False)
+domains_p.to_parquet(PROCESSED_DIR / "domains_processed.parquet", index=False)
+ips_p.to_parquet(PROCESSED_DIR / "ips_processed.parquet", index=False)
+
+# Split dataframes
+datasets = {
+    "otx": otx_p,
+    "cve": cve_p,
+    "domains": domains_p,
+    "ips": ips_p
+}
+
+for name, df in datasets.items():
+    train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+
+    train_df.to_parquet(SPLITS_DIR / f"{name}_train.parquet", index=False)
+    test_df.to_parquet(SPLITS_DIR / f"{name}_test.parquet", index=False)
+
+3) 03_modeling_and_evaluation.ipynb
+# General
+import re, json, joblib, sys
+import numpy as np
+import pandas as pd
+from pathlib import Path
+
+# Modeling & Evaluation
+import torch
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, average_precision_score, confusion_matrix,
+    classification_report, hamming_loss
+)
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import LabelEncoder, StandardScaler, OneHotEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
+from xgboost import XGBClassifier
+from scipy.special import expit
+
+from transformers import (
+    AutoTokenizer, AutoModelForSequenceClassification,
+    TrainingArguments, Trainer, DataCollatorWithPadding
+)
+from datasets import Dataset
+
+# Add project root to Python path
+PROJECT_ROOT = Path.cwd().parent
+sys.path.append(str(PROJECT_ROOT))
+
+# User Configs
+from configs.paths import SPLITS_DIR, ARTIFACT_DIR, METRICS_DIR
+
+otx_train = pd.read_parquet(SPLITS_DIR / "otx_train.parquet")
+otx_test  = pd.read_parquet(SPLITS_DIR / "otx_test.parquet")
+
+cve_train = pd.read_parquet(SPLITS_DIR / "cve_train.parquet")
+cve_test  = pd.read_parquet(SPLITS_DIR / "cve_test.parquet")
+
+dom_train = pd.read_parquet(SPLITS_DIR / "domains_train.parquet")
+dom_test  = pd.read_parquet(SPLITS_DIR / "domains_test.parquet")
+
+ip_train = pd.read_parquet(SPLITS_DIR / "ips_train.parquet")
+ip_test  = pd.read_parquet(SPLITS_DIR / "ips_test.parquet")
+
+# Split multi-label on Attack_IDs
+def split_multilabel(series: pd.Series):
+    return series.fillna("unknown").astype(str).apply(
+        lambda x: [t.strip().lower() for t in x.split(",") if t.strip() and t.strip().lower() != "unknown"]
+    )
+
+OTX_TARGET = "Attack_IDs"
+
+y_train_raw = split_multilabel(otx_train[OTX_TARGET])
+y_test_raw = split_multilabel(otx_test[OTX_TARGET])
+
+# Multi-classification on Attack_IDs
+mlb = MultiLabelBinarizer()
+y_train = mlb.fit_transform(y_train_raw)
+y_test = mlb.transform(y_test_raw)
+
+# TF-IDF as baseline
+otx_baseline = Pipeline([
+    ("tfidf", TfidfVectorizer(
+        ngram_range=(1, 2),
+        max_features=50000,
+        min_df=2,
+        analyzer="word"
+    )),
+    ("clf", OneVsRestClassifier(
+        LogisticRegression(max_iter=3000, class_weight="balanced")
+    ))
+])
+
+otx_baseline.fit(otx_train["combined_text"], y_train)
+preds = otx_baseline.predict(otx_test["combined_text"])
+
+print("OTX Micro F1:", f1_score(y_test, preds, average="micro", zero_division=0))
+print("OTX Macro F1:", f1_score(y_test, preds, average="macro", zero_division=0))
+print("OTX Hamming Loss:", hamming_loss(y_test, preds))
+print(classification_report(y_test, preds, target_names=mlb.classes_, zero_division=0))
+
+OTX Micro F1: 0.35058430717863104
+OTX Macro F1: 0.10745654589594451
+OTX Hamming Loss: 0.027891636094214935
+              precision    recall  f1-score   support
+
+       t1001       0.50      0.17      0.25         6
+   t1001.001       0.00      0.00      0.00         0
+   t1001.003       0.00      0.00      0.00         2
+       t1003       0.32      0.41      0.36        29
+   t1003.001       0.75      0.60      0.67         5
+   t1003.002       1.00      0.50      0.67         2
+   t1003.003       1.00      1.00      1.00         1
+   t1003.006       0.00      0.00      0.00         3
+   t1003.008       0.00      0.00      0.00         0
+       t1005       0.38      0.41      0.40        63
+       t1006       0.00      0.00      0.00         1
+       t1007       1.00      0.20      0.33         5
+       t1008       0.00      0.00      0.00         4
+       t1009       0.00      0.00      0.00         0
+       t1010       0.00      0.00      0.00         5
+   t1011.001       0.00      0.00      0.00         0
+       t1012       0.21      0.39      0.27        36
+       t1014       0.50      0.33      0.40         3
+       t1016       0.26      0.24      0.25        58
+   t1016.001       0.00      0.00      0.00         0
+       t1018       0.32      0.32      0.32        19
+       t1020       0.00      0.00      0.00        17
+       t1021       0.23      0.22      0.23        27
+   t1021.001       0.27      0.40      0.32        30
+   t1021.002       0.10      0.21      0.14        14
+   t1021.003       0.00      0.00      0.00         0
+   t1021.004       0.30      0.30      0.30        10
+   t1021.005       0.00      0.00      0.00         3
+   t1021.006       0.00      0.00      0.00         1
+       t1022       0.00      0.00      0.00         1
+       t1024       0.00      0.00      0.00         0
+       t1025       0.00      0.00      0.00         1
+       t1027       0.64      0.71      0.67       199
+   t1027.001       1.00      0.33      0.50         6
+   t1027.002       0.17      0.12      0.14        34
+   t1027.003       0.50      0.12      0.20         8
+   t1027.004       0.00      0.00      0.00         1
+   t1027.005       0.00      0.00      0.00         0
+       t1029       0.00      0.00      0.00         0
+       t1030       0.00      0.00      0.00         1
+       t1031       0.00      0.00      0.00         0
+       t1033       0.16      0.14      0.14        37
+       t1035       0.00      0.00      0.00         0
+       t1036       0.30      0.29      0.30        89
+   t1036.001       0.00      0.00      0.00         2
+   t1036.002       0.00      0.00      0.00         7
+   t1036.003       0.00      0.00      0.00         2
+   t1036.004       0.33      0.06      0.10        17
+   t1036.005       0.19      0.10      0.13        31
+   t1036.006       0.00      0.00      0.00         0
+       t1037       0.00      0.00      0.00         2
+   t1037.001       0.00      0.00      0.00         0
+   t1037.003       0.00      0.00      0.00         0
+   t1037.004       0.00      0.00      0.00         0
+       t1038       0.00      0.00      0.00         0
+       t1039       0.00      0.00      0.00         3
+       t1040       0.00      0.00      0.00         4
+       t1041       0.24      0.36      0.29        45
+       t1042       0.00      0.00      0.00         0
+       t1043       0.00      0.00      0.00         1
+       t1045       0.00      0.00      0.00         1
+       t1046       0.21      0.33      0.26        18
+       t1047       0.17      0.12      0.14        16
+       t1048       0.50      0.09      0.15        11
+   t1048.001       0.00      0.00      0.00         0
+   t1048.002       0.00      0.00      0.00         0
+   t1048.003       0.00      0.00      0.00         2
+       t1049       0.25      0.08      0.12        12
+       t1050       0.00      0.00      0.00         0
+       t1052       0.00      0.00      0.00         0
+   t1052.001       0.00      0.00      0.00         0
+       t1053       0.21      0.10      0.14        30
+   t1053.002       0.00      0.00      0.00         0
+   t1053.003       0.17      0.14      0.15         7
+   t1053.004       0.00      0.00      0.00         0
+   t1053.005       0.42      0.39      0.41        41
+   t1053.006       0.00      0.00      0.00         0
+   t1053.007       0.00      0.00      0.00         0
+       t1054       0.00      0.00      0.00         0
+       t1055       0.43      0.49      0.46       114
+   t1055.001       0.00      0.00      0.00         2
+   t1055.002       0.00      0.00      0.00         4
+   t1055.003       0.00      0.00      0.00         3
+   t1055.004       0.00      0.00      0.00         1
+   t1055.009       0.00      0.00      0.00         0
+   t1055.012       0.30      0.33      0.32         9
+   t1055.013       0.00      0.00      0.00         0
+       t1056       0.17      0.16      0.16        38
+   t1056.001       0.34      0.45      0.39        64
+   t1056.002       0.00      0.00      0.00         4
+   t1056.003       0.00      0.00      0.00         3
+   t1056.004       0.00      0.00      0.00         8
+       t1057       0.36      0.48      0.41        67
+       t1059       0.28      0.30      0.29        99
+   t1059.001       0.49      0.50      0.49       117
+   t1059.002       0.42      0.83      0.56         6
+   t1059.003       0.23      0.29      0.25        56
+   t1059.004       0.36      0.50      0.42        20
+   t1059.005       0.38      0.48      0.42        29
+   t1059.006       0.50      0.44      0.47        25
+   t1059.007       0.43      0.48      0.45        42
+   t1059.008       0.00      0.00      0.00         0
+       t1060       0.00      0.00      0.00         2
+       t1063       0.00      0.00      0.00         0
+       t1064       0.00      0.00      0.00         4
+       t1068       0.44      0.50      0.47        22
+       t1069       0.00      0.00      0.00         5
+   t1069.001       0.00      0.00      0.00         2
+   t1069.002       0.00      0.00      0.00         2
+   t1069.003       0.00      0.00      0.00         0
+       t1070       0.14      0.08      0.11        24
+   t1070.001       0.00      0.00      0.00         6
+   t1070.002       0.00      0.00      0.00         0
+   t1070.003       0.00      0.00      0.00         0
+   t1070.004       0.26      0.23      0.24        31
+   t1070.005       0.00      0.00      0.00         0
+   t1070.006       0.00      0.00      0.00         3
+       t1071       0.24      0.30      0.27        63
+   t1071.001       0.43      0.48      0.45       102
+   t1071.002       0.00      0.00      0.00         2
+   t1071.003       0.00      0.00      0.00         0
+   t1071.004       0.33      0.20      0.25         5
+       t1072       0.00      0.00      0.00         5
+       t1073       0.00      0.00      0.00         0
+       t1074       0.15      0.13      0.14        15
+   t1074.001       0.00      0.00      0.00         8
+   t1074.002       0.00      0.00      0.00         0
+       t1076       0.00      0.00      0.00         0
+       t1078       0.46      0.64      0.53       107
+   t1078.001       0.00      0.00      0.00         8
+   t1078.002       0.25      0.11      0.15         9
+   t1078.003       1.00      0.20      0.33         5
+   t1078.004       0.38      0.27      0.32        11
+       t1080       0.00      0.00      0.00         0
+       t1082       0.50      0.57      0.53       141
+       t1083       0.36      0.47      0.41       104
+       t1085       0.00      0.00      0.00         1
+       t1086       0.00      0.00      0.00         0
+       t1087       0.39      0.17      0.23        42
+   t1087.001       0.00      0.00      0.00         3
+   t1087.002       0.00      0.00      0.00         4
+   t1087.003       0.00      0.00      0.00         0
+   t1087.004       0.00      0.00      0.00         2
+       t1088       0.00      0.00      0.00         0
+       t1089       0.00      0.00      0.00         0
+       t1090       0.23      0.19      0.21        32
+   t1090.001       0.00      0.00      0.00         1
+   t1090.002       0.00      0.00      0.00         1
+   t1090.003       0.00      0.00      0.00         2
+   t1090.004       0.00      0.00      0.00         2
+       t1091       0.00      0.00      0.00         4
+       t1092       0.00      0.00      0.00         1
+       t1094       0.00      0.00      0.00         1
+       t1095       0.05      0.04      0.05        24
+       t1098       0.00      0.00      0.00        13
+   t1098.001       0.00      0.00      0.00         0
+   t1098.002       0.00      0.00      0.00         0
+   t1098.003       0.00      0.00      0.00         0
+   t1098.004       0.00      0.00      0.00         1
+       t1102       0.24      0.31      0.27        52
+   t1102.001       0.50      0.11      0.18         9
+   t1102.002       0.19      0.12      0.15        40
+   t1102.003       0.00      0.00      0.00         8
+       t1104       1.00      0.33      0.50         3
+       t1105       0.47      0.62      0.53       120
+       t1106       0.07      0.04      0.05        23
+       t1107       0.00      0.00      0.00         1
+       t1108       0.00      0.00      0.00         0
+       t1110       0.17      0.14      0.15        14
+   t1110.001       0.00      0.00      0.00         4
+   t1110.002       1.00      0.50      0.67         2
+   t1110.003       0.00      0.00      0.00         3
+   t1110.004       1.00      0.50      0.67         2
+       t1111       0.00      0.00      0.00         0
+       t1112       0.23      0.28      0.25        40
+       t1113       0.35      0.35      0.35        51
+       t1114       0.00      0.00      0.00        10
+   t1114.001       0.00      0.00      0.00         2
+   t1114.002       0.00      0.00      0.00         0
+   t1114.003       0.00      0.00      0.00         1
+       t1115       0.20      0.21      0.21        14
+       t1119       0.17      0.08      0.11        12
+       t1120       0.00      0.00      0.00         1
+       t1122       0.00      0.00      0.00         0
+       t1123       0.00      0.00      0.00         5
+       t1124       0.00      0.00      0.00         4
+       t1125       0.33      0.20      0.25         5
+       t1127       0.00      0.00      0.00         3
+   t1127.001       0.00      0.00      0.00         1
+       t1129       0.50      0.25      0.33        12
+       t1132       0.13      0.07      0.09        41
+   t1132.001       0.14      0.10      0.12        29
+   t1132.002       0.00      0.00      0.00         2
+       t1133       0.48      0.61      0.54        57
+       t1134       0.33      0.06      0.10        17
+   t1134.001       0.00      0.00      0.00         1
+   t1134.002       0.00      0.00      0.00         0
+   t1134.005       0.00      0.00      0.00         0
+       t1135       0.27      0.43      0.33         7
+       t1136       0.00      0.00      0.00         8
+   t1136.001       0.00      0.00      0.00         0
+   t1136.002       0.00      0.00      0.00         2
+   t1136.003       0.00      0.00      0.00         0
+       t1137       0.00      0.00      0.00         0
+   t1137.001       0.00      0.00      0.00         0
+   t1137.005       0.00      0.00      0.00         0
+   t1137.006       0.00      0.00      0.00         0
+       t1139       0.00      0.00      0.00         0
+       t1140       0.52      0.56      0.54       133
+       t1143       0.00      0.00      0.00         0
+       t1158       0.00      0.00      0.00         0
+       t1171       0.00      0.00      0.00         0
+       t1176       0.67      0.40      0.50        10
+       t1179       0.00      0.00      0.00         0
+       t1180       0.00      0.00      0.00         0
+       t1181       0.00      0.00      0.00         0
+       t1185       0.38      0.47      0.42        19
+       t1187       0.00      0.00      0.00         1
+       t1189       0.38      0.15      0.22        39
+       t1190       0.54      0.68      0.60        88
+       t1192       0.25      0.12      0.17         8
+       t1193       1.00      0.25      0.40         4
+       t1195       0.30      0.38      0.33         8
+   t1195.001       0.27      1.00      0.43         3
+   t1195.002       0.36      0.80      0.50         5
+       t1197       0.00      0.00      0.00         1
+       t1198       0.00      0.00      0.00         0
+       t1199       0.14      0.08      0.10        13
+       t1200       0.00      0.00      0.00         0
+       t1201       0.00      0.00      0.00         0
+       t1202       1.00      0.20      0.33         5
+       t1203       0.00      0.00      0.00         9
+       t1204       0.39      0.46      0.42        93
+   t1204.001       0.20      0.26      0.23        35
+   t1204.002       0.40      0.51      0.45        87
+   t1204.003       0.00      0.00      0.00         1
+       t1205       0.00      0.00      0.00         4
+   t1205.001       0.00      0.00      0.00         0
+       t1207       0.00      0.00      0.00         1
+       t1210       0.20      0.14      0.17         7
+       t1211       0.00      0.00      0.00         2
+       t1212       0.00      0.00      0.00         0
+       t1213       0.15      0.15      0.15        13
+   t1213.002       0.00      0.00      0.00         2
+       t1215       0.00      0.00      0.00         0
+       t1216       0.00      0.00      0.00         1
+       t1217       0.00      0.00      0.00         4
+       t1218       0.31      0.24      0.27        17
+   t1218.001       1.00      1.00      1.00         1
+   t1218.003       1.00      1.00      1.00         1
+   t1218.004       1.00      1.00      1.00         1
+   t1218.005       1.00      0.33      0.50         3
+   t1218.007       0.00      0.00      0.00         4
+   t1218.009       0.00      0.00      0.00         0
+   t1218.010       0.00      0.00      0.00         1
+   t1218.011       0.14      0.06      0.08        18
+       t1219       0.30      0.19      0.23        32
+       t1220       0.00      0.00      0.00         0
+       t1221       0.00      0.00      0.00         2
+       t1222       0.00      0.00      0.00         3
+   t1222.001       0.00      0.00      0.00         0
+   t1222.002       0.00      0.00      0.00         1
+       t1398       0.00      0.00      0.00         0
+       t1407       0.00      0.00      0.00         0
+       t1409       0.00      0.00      0.00         0
+       t1412       0.00      0.00      0.00         0
+       t1417       0.00      0.00      0.00         0
+       t1426       0.00      0.00      0.00         1
+       t1430       0.00      0.00      0.00         0
+       t1437       0.00      0.00      0.00         1
+       t1444       0.00      0.00      0.00         0
+       t1464       0.00      0.00      0.00         0
+       t1471       0.00      0.00      0.00         0
+       t1480       0.00      0.00      0.00         0
+       t1482       0.00      0.00      0.00         3
+       t1484       0.00      0.00      0.00         1
+   t1484.001       0.00      0.00      0.00         1
+       t1485       0.00      0.00      0.00         9
+       t1486       0.64      0.73      0.68        44
+       t1489       0.24      0.47      0.31        17
+       t1490       0.44      0.65      0.52        26
+       t1491       0.00      0.00      0.00         3
+   t1491.001       0.00      0.00      0.00         1
+       t1492       0.00      0.00      0.00         0
+       t1493       0.00      0.00      0.00         0
+       t1496       0.25      0.23      0.24        13
+       t1497       0.20      0.19      0.19        48
+   t1497.001       0.25      0.18      0.21        11
+   t1497.002       0.00      0.00      0.00         1
+   t1497.003       0.50      0.17      0.25         6
+       t1498       0.33      0.86      0.48         7
+   t1498.001       0.00      0.00      0.00         0
+   t1498.002       0.00      0.00      0.00         0
+       t1499       0.60      0.33      0.43         9
+       t1503       0.00      0.00      0.00         0
+       t1505       0.00      0.00      0.00         5
+   t1505.001       0.00      0.00      0.00         0
+   t1505.002       0.00      0.00      0.00         0
+   t1505.003       0.42      0.67      0.52        21
+       t1506       0.00      0.00      0.00         0
+       t1508       0.00      0.00      0.00         0
+       t1509       0.00      0.00      0.00         0
+       t1513       0.00      0.00      0.00         0
+       t1516       0.00      0.00      0.00         0
+       t1518       0.31      0.15      0.21        26
+   t1518.001       0.00      0.00      0.00         7
+       t1519       0.00      0.00      0.00         0
+       t1525       0.00      0.00      0.00         1
+       t1526       0.00      0.00      0.00         2
+       t1527       0.00      0.00      0.00         0
+       t1528       0.50      0.38      0.43        16
+       t1529       0.00      0.00      0.00         2
+       t1530       0.00      0.00      0.00         4
+       t1531       0.00      0.00      0.00         2
+       t1533       0.00      0.00      0.00         0
+       t1534       0.50      0.36      0.42        11
+       t1535       0.00      0.00      0.00         0
+       t1537       0.00      0.00      0.00         3
+       t1538       0.00      0.00      0.00         0
+       t1539       0.27      0.43      0.33         7
+       t1541       0.00      0.00      0.00         0
+       t1542       0.00      0.00      0.00         0
+   t1542.001       0.00      0.00      0.00         0
+   t1542.002       0.00      0.00      0.00         0
+   t1542.003       0.00      0.00      0.00         2
+   t1542.004       0.00      0.00      0.00         0
+       t1543       0.25      0.09      0.13        22
+   t1543.001       0.50      0.50      0.50         2
+   t1543.002       0.00      0.00      0.00         1
+   t1543.003       0.25      0.20      0.22        25
+   t1543.004       0.00      0.00      0.00         2
+       t1546       0.00      0.00      0.00         3
+   t1546.001       0.00      0.00      0.00         0
+   t1546.003       0.00      0.00      0.00         0
+   t1546.004       0.00      0.00      0.00         1
+   t1546.011       0.00      0.00      0.00         0
+   t1546.015       0.00      0.00      0.00         2
+       t1547       0.23      0.10      0.14        30
+   t1547.001       0.45      0.53      0.49        90
+   t1547.003       0.00      0.00      0.00         0
+   t1547.004       0.00      0.00      0.00         1
+   t1547.006       0.00      0.00      0.00         2
+   t1547.008       0.00      0.00      0.00         0
+   t1547.009       0.00      0.00      0.00         1
+   t1547.010       0.00      0.00      0.00         0
+   t1547.011       0.00      0.00      0.00         0
+   t1547.013       0.00      0.00      0.00         0
+       t1548       0.00      0.00      0.00         5
+   t1548.001       0.00      0.00      0.00         0
+   t1548.002       0.25      0.10      0.14        10
+   t1548.003       0.00      0.00      0.00         1
+       t1550       0.17      0.11      0.13         9
+   t1550.001       0.00      0.00      0.00         3
+   t1550.002       1.00      0.50      0.67         2
+   t1550.003       0.00      0.00      0.00         1
+   t1550.004       0.00      0.00      0.00         0
+       t1552       0.18      0.23      0.20        13
+   t1552.001       0.24      0.38      0.29        21
+   t1552.002       0.00      0.00      0.00         0
+   t1552.003       0.00      0.00      0.00         1
+   t1552.004       0.50      0.20      0.29         5
+   t1552.005       0.00      0.00      0.00         0
+   t1552.006       0.00      0.00      0.00         0
+   t1552.007       0.00      0.00      0.00         0
+       t1553       0.25      0.11      0.15         9
+   t1553.001       0.17      0.33      0.22         3
+   t1553.002       0.00      0.00      0.00        21
+   t1553.003       0.00      0.00      0.00         2
+   t1553.004       0.00      0.00      0.00         3
+   t1553.005       0.00      0.00      0.00         7
+   t1553.006       0.00      0.00      0.00         3
+       t1554       0.00      0.00      0.00         3
+       t1555       0.34      0.56      0.43        39
+   t1555.001       0.00      0.00      0.00         1
+   t1555.002       0.00      0.00      0.00         0
+   t1555.003       0.38      0.36      0.37        22
+   t1555.004       0.00      0.00      0.00         1
+   t1555.005       1.00      0.50      0.67         2
+       t1556       0.00      0.00      0.00         4
+   t1556.001       0.00      0.00      0.00         0
+   t1556.002       0.00      0.00      0.00         1
+   t1556.004       0.00      0.00      0.00         0
+       t1557       0.00      0.00      0.00         9
+   t1557.001       0.00      0.00      0.00         3
+   t1557.002       0.00      0.00      0.00         0
+       t1558       0.00      0.00      0.00         4
+   t1558.001       0.00      0.00      0.00         0
+   t1558.002       0.00      0.00      0.00         0
+   t1558.003       0.00      0.00      0.00         2
+   t1558.004       0.00      0.00      0.00         0
+       t1559       0.00      0.00      0.00         3
+   t1559.001       0.00      0.00      0.00         1
+   t1559.002       0.00      0.00      0.00         1
+       t1560       0.00      0.00      0.00        13
+   t1560.001       0.00      0.00      0.00         2
+       t1561       0.00      0.00      0.00         2
+   t1561.001       0.00      0.00      0.00         0
+   t1561.002       0.00      0.00      0.00         0
+       t1562       0.00      0.00      0.00        19
+   t1562.001       0.30      0.33      0.31        42
+   t1562.002       0.00      0.00      0.00         4
+   t1562.004       0.00      0.00      0.00        11
+   t1562.006       0.00      0.00      0.00         1
+   t1562.007       0.00      0.00      0.00         1
+       t1563       0.00      0.00      0.00         0
+   t1563.001       0.00      0.00      0.00         0
+   t1563.002       0.00      0.00      0.00         0
+       t1564       0.00      0.00      0.00         8
+   t1564.001       0.00      0.00      0.00        10
+   t1564.002       0.00      0.00      0.00         1
+   t1564.003       0.33      0.14      0.20         7
+   t1564.004       0.00      0.00      0.00         3
+       t1565       0.00      0.00      0.00         3
+   t1565.001       0.00      0.00      0.00         0
+       t1566       0.54      0.60      0.57       126
+   t1566.001       0.37      0.50      0.43        40
+   t1566.002       0.31      0.24      0.27        41
+   t1566.003       0.00      0.00      0.00         4
+       t1567       0.12      0.10      0.11        10
+   t1567.001       0.00      0.00      0.00         0
+   t1567.002       0.00      0.00      0.00         6
+       t1568       0.23      0.27      0.25        11
+   t1568.002       0.00      0.00      0.00         3
+       t1569       0.00      0.00      0.00         7
+   t1569.001       0.00      0.00      0.00         0
+   t1569.002       0.11      0.06      0.08        16
+       t1570       0.40      0.15      0.22        13
+       t1571       0.28      0.40      0.33        43
+       t1572       0.17      0.07      0.10        14
+       t1573       0.25      0.25      0.25        52
+   t1573.001       0.20      0.14      0.17        28
+   t1573.002       0.00      0.00      0.00        13
+       t1574       0.33      0.08      0.12        13
+   t1574.001       0.60      0.30      0.40        10
+   t1574.002       0.33      0.19      0.25        36
+   t1574.005       0.00      0.00      0.00         0
+   t1574.006       0.00      0.00      0.00         2
+   t1574.008       0.00      0.00      0.00         2
+   t1574.011       0.00      0.00      0.00         0
+       t1578       0.00      0.00      0.00         1
+       t1580       0.00      0.00      0.00         0
+       t1581       0.00      0.00      0.00         0
+       t1582       0.00      0.00      0.00         1
+       t1583       0.42      0.32      0.36        25
+   t1583.001       0.46      0.38      0.42        29
+   t1583.002       0.00      0.00      0.00         1
+   t1583.003       0.00      0.00      0.00         6
+   t1583.004       0.00      0.00      0.00         5
+   t1583.005       0.00      0.00      0.00         0
+   t1583.006       0.33      0.25      0.29         4
+       t1584       0.42      0.58      0.49        33
+   t1584.001       0.33      0.09      0.14        11
+   t1584.003       0.00      0.00      0.00         0
+   t1584.004       0.00      0.00      0.00         1
+   t1584.005       0.00      0.00      0.00         0
+   t1584.006       0.00      0.00      0.00         1
+       t1585       0.39      0.47      0.42        15
+   t1585.001       1.00      0.33      0.50         6
+   t1585.002       0.00      0.00      0.00         4
+       t1586       0.48      0.62      0.54        16
+   t1586.001       0.00      0.00      0.00         1
+   t1586.002       0.00      0.00      0.00         4
+       t1587       0.10      0.17      0.12         6
+   t1587.001       0.00      0.00      0.00        11
+   t1587.002       0.00      0.00      0.00         0
+   t1587.003       0.00      0.00      0.00         0
+   t1587.004       0.00      0.00      0.00         1
+       t1588       0.27      0.40      0.32        10
+   t1588.001       0.11      0.07      0.08        15
+   t1588.002       0.10      0.06      0.07        17
+   t1588.003       0.00      0.00      0.00         1
+   t1588.004       0.00      0.00      0.00         4
+   t1588.005       0.00      0.00      0.00         1
+   t1588.006       0.00      0.00      0.00         0
+       t1589       0.39      0.50      0.44        18
+   t1589.001       0.00      0.00      0.00         2
+   t1589.002       0.50      0.11      0.18         9
+   t1589.003       0.00      0.00      0.00         0
+       t1590       0.11      0.10      0.11        10
+   t1590.001       0.00      0.00      0.00         1
+   t1590.005       0.00      0.00      0.00         0
+   t1590.006       0.00      0.00      0.00         0
+       t1591       0.00      0.00      0.00         1
+   t1591.001       0.00      0.00      0.00         0
+   t1591.002       0.00      0.00      0.00         0
+       t1592       0.45      0.38      0.42        13
+   t1592.001       0.00      0.00      0.00         0
+   t1592.002       0.00      0.00      0.00         2
+   t1592.004       0.00      0.00      0.00         0
+       t1593       0.00      0.00      0.00         1
+   t1593.002       0.00      0.00      0.00         2
+       t1594       0.00      0.00      0.00         0
+       t1595       0.13      0.22      0.17         9
+   t1595.001       0.00      0.00      0.00         0
+   t1595.002       1.00      1.00      1.00         1
+       t1596       0.00      0.00      0.00         2
+       t1597       0.00      0.00      0.00         0
+       t1598       0.44      0.44      0.44         9
+   t1598.001       0.00      0.00      0.00         0
+   t1598.002       0.00      0.00      0.00         2
+   t1598.003       0.00      0.00      0.00         4
+       t1599       0.00      0.00      0.00         1
+       t1600       0.00      0.00      0.00         0
+   t1600.001       0.00      0.00      0.00         0
+       t1603       0.00      0.00      0.00         0
+       t1606       1.00      0.20      0.33         5
+   t1606.001       0.00      0.00      0.00         0
+   t1606.002       0.00      0.00      0.00         1
+       t1608       0.39      0.50      0.44        14
+   t1608.001       0.38      0.18      0.24        17
+   t1608.002       0.00      0.00      0.00         1
+   t1608.003       0.00      0.00      0.00         3
+   t1608.004       0.00      0.00      0.00        11
+   t1608.005       0.00      0.00      0.00         2
+       t1609       0.00      0.00      0.00         3
+       t1610       0.00      0.00      0.00         1
+       t1611       0.00      0.00      0.00         3
+       t1612       0.00      0.00      0.00         0
+       t1613       0.00      0.00      0.00         2
+       t1614       0.00      0.00      0.00         5
+      ta0001       0.00      0.00      0.00         0
+      ta0002       0.00      0.00      0.00         0
+      ta0003       0.00      0.00      0.00         0
+      ta0004       0.00      0.00      0.00         0
+      ta0005       0.00      0.00      0.00         0
+      ta0006       0.00      0.00      0.00         0
+      ta0007       0.00      0.00      0.00         0
+      ta0008       0.00      0.00      0.00         0
+      ta0009       0.00      0.00      0.00         0
+      ta0010       0.00      0.00      0.00         0
+      ta0011       0.00      0.00      0.00         0
+      ta0027       0.00      0.00      0.00         0
+      ta0042       0.00      0.00      0.00         0
+
+   micro avg       0.36      0.34      0.35      5500
+   macro avg       0.13      0.11      0.11      5500
+weighted avg       0.33      0.34      0.32      5500
+ samples avg       0.36      0.32      0.31      5500
+
+joblib.dump(
+    {"model": otx_baseline, "mlb": mlb},
+    ARTIFACT_DIR / "otx_attackids_tfidf_ovr_logreg.joblib"
+)
+
+['C:\\Users\\Admin\\Documents\\GitHub\\data_science\\outputs\\artifacts\\otx_attackids_tfidf_ovr_logreg.joblib']
+
+MODEL_NAME = "distilbert-base-uncased"
+
+# Label encoding
+mlb = MultiLabelBinarizer()
+
+y_train = mlb.fit_transform(otx_train["Attack_List"])
+y_test = mlb.transform(otx_test["Attack_List"])
+
+num_labels = len(mlb.classes_)
+
+# Dataset creation
+train_ds = Dataset.from_dict({"text": otx_train["combined_text"].tolist(), "labels": y_train.astype(np.float32)})
+test_ds = Dataset.from_dict({"text": otx_test["combined_text"].tolist(), "labels": y_test.astype(np.float32)})
+
+# Tokenizer
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+
+def tokenize(batch):
+    return tokenizer(
+        batch["text"], 
+        truncation = True, 
+        padding = False, 
+        max_length = 192 # Reduced for small dataset stability
+    )
+
+train_ds = train_ds.map(tokenize, batched = True) 
+test_ds = test_ds.map(tokenize, batched = True)
+
+data_collator = DataCollatorWithPadding(tokenizer = tokenizer)
+
+# Model
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels = num_labels, problem_type="multi_label_classification")
+
+# Metrics
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+
+    probs = 1 / (1 + np.exp(-logits))
+    preds = (probs > 0.5).astype(int)
+
+    return {
+        "accuracy": accuracy_score(labels, preds),
+        "macro_f1": f1_score(labels, preds, average="macro")
+    }
+
+# Training arguments
+training_args = TrainingArguments(
+    output_dir=str(ARTIFACT_DIR / "otx_transformer"),
+
+    learning_rate=2e-5,
+    num_train_epochs=4,
+
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+
+    weight_decay=0.01,
+
+    eval_strategy="epoch",
+    save_strategy="epoch",
+
+    load_best_model_at_end=True,
+    metric_for_best_model="macro_f1",
+
+    logging_steps=25,
+
+    warmup_steps = 0.1, # For small dataset
+    lr_scheduler_type="linear",
+
+    report_to="none"
+)
+
+# Trainer
+trainer = Trainer(
+    model = model,
+    args = training_args,
+    train_dataset = train_ds,
+    eval_dataset = test_ds,
+    data_collator = data_collator,
+    compute_metrics = compute_metrics
+)
+
+trainer.train()
+
+Loading weights: 100%|██████████| 100/100 [00:00<00:00, 1483.11it/s]
+[transformers] DistilBertForSequenceClassification LOAD REPORT from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+classifier.bias         | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+c:\Users\Admin\Documents\GitHub\data_science\.venv\Lib\site-packages\torch\utils\data\dataloader.py:775: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ [944/944 1:58:33, Epoch 4/4]
+Epoch	Training Loss	Validation Loss	Accuracy	Macro F1
+1	0.242581	0.231560	0.002123	0.005605
+2	0.222868	0.222811	0.002123	0.005605
+3	0.226439	0.219678	0.002123	0.005605
+4	0.226216	0.217974	0.000000	0.008740
+
+TrainOutput(global_step=944, training_loss=0.27541020209506406, metrics={'train_runtime': 7124.7622, 'train_samples_per_second': 1.057, 'train_steps_per_second': 0.132, 'total_flos': 301549348175508.0, 'train_loss': 0.27541020209506406, 'epoch': 4.0})
+
+
+# Evaluation
+pred_out = trainer.predict(test_ds)
+
+# Convert logits -> probabilities
+y_prob = expit(pred_out.predictions)
+
+# Threshold probabilities
+y_pred = (y_prob >= 0.2).astype(int)
+
+# True labels
+y_true = np.array(test_ds["labels"])
+
+print("OTX Transformer Accuracy:", accuracy_score(y_true, y_pred))
+print("OTX Transformer Macro F1:", f1_score(y_true, y_pred, average="macro"))
+print(classification_report(y_true, y_pred, target_names=mlb.classes_))
+
+OTX Transformer Accuracy: 0.0
+OTX Transformer Macro F1: 0.06786762924664373
+              precision    recall  f1-score   support
+
+       T1001       0.00      0.00      0.00         8
+       T1003       0.50      0.06      0.10        35
+       T1005       0.00      0.00      0.00        63
+       T1007       0.00      0.00      0.00         5
+       T1012       0.00      0.00      0.00        36
+       T1014       0.00      0.00      0.00         3
+       T1016       0.00      0.00      0.00        58
+       T1018       0.00      0.00      0.00        19
+       T1020       0.00      0.00      0.00        17
+       T1021       0.35      0.41      0.38        68
+       T1027       0.44      1.00      0.61       208
+       T1033       0.00      0.00      0.00        37
+       T1036       0.28      1.00      0.44       131
+       T1037       0.00      0.00      0.00         2
+       T1041       0.00      0.00      0.00        45
+       T1046       0.00      0.00      0.00        18
+       T1047       0.00      0.00      0.00        16
+       T1048       0.00      0.00      0.00        13
+       T1049       0.00      0.00      0.00        12
+       T1053       0.18      0.12      0.14        78
+       T1055       0.32      0.92      0.47       125
+       T1056       0.24      0.56      0.34       108
+       T1057       0.28      0.18      0.22        67
+       T1059       0.63      1.00      0.77       297
+       T1064       0.00      0.00      0.00         4
+       T1068       0.00      0.00      0.00        22
+       T1069       0.00      0.00      0.00         7
+       T1070       0.38      0.30      0.33        61
+       T1071       0.35      1.00      0.52       165
+       T1072       0.00      0.00      0.00         5
+       T1074       0.00      0.00      0.00        23
+       T1078       0.26      1.00      0.41       121
+       T1082       0.30      1.00      0.46       141
+       T1083       0.26      1.00      0.41       104
+       T1087       0.00      0.00      0.00        49
+       T1090       0.00      0.00      0.00        38
+       T1091       0.00      0.00      0.00         4
+       T1095       0.00      0.00      0.00        24
+       T1098       0.00      0.00      0.00        14
+       T1102       0.21      1.00      0.35        98
+       T1105       0.30      0.93      0.45       120
+       T1106       0.00      0.00      0.00        23
+       T1110       0.00      0.00      0.00        20
+       T1112       0.00      0.00      0.00        40
+       T1113       0.00      0.00      0.00        51
+       T1114       0.00      0.00      0.00        12
+       T1115       0.00      0.00      0.00        14
+       T1119       0.00      0.00      0.00        12
+       T1120       0.00      0.00      0.00         1
+       T1123       0.00      0.00      0.00         5
+       T1124       0.00      0.00      0.00         4
+       T1125       0.00      0.00      0.00         5
+       T1129       0.00      0.00      0.00        12
+       T1132       0.00      0.00      0.00        70
+       T1133       0.00      0.00      0.00        57
+       T1134       0.00      0.00      0.00        18
+       T1135       0.00      0.00      0.00         7
+       T1136       0.00      0.00      0.00        10
+       T1140       0.28      1.00      0.44       133
+       T1176       0.00      0.00      0.00        10
+       T1185       0.00      0.00      0.00        19
+       T1189       0.00      0.00      0.00        39
+       T1190       0.41      0.56      0.47        88
+       T1192       0.00      0.00      0.00         8
+       T1193       0.00      0.00      0.00         4
+       T1195       0.00      0.00      0.00        13
+       T1199       0.00      0.00      0.00        13
+       T1202       0.00      0.00      0.00         5
+       T1203       0.00      0.00      0.00         9
+       T1204       0.42      1.00      0.59       199
+       T1205       0.00      0.00      0.00         4
+       T1210       0.00      0.00      0.00         7
+       T1213       0.00      0.00      0.00        15
+       T1217       0.00      0.00      0.00         4
+       T1218       0.00      0.00      0.00        43
+       T1219       0.00      0.00      0.00        32
+       T1222       0.00      0.00      0.00         4
+       T1482       0.00      0.00      0.00         3
+       T1485       0.00      0.00      0.00         9
+       T1486       0.00      0.00      0.00        44
+       T1489       0.00      0.00      0.00        17
+       T1490       0.00      0.00      0.00        26
+       T1491       0.00      0.00      0.00         4
+       T1496       0.00      0.00      0.00        13
+       T1497       0.00      0.00      0.00        56
+       T1498       0.00      0.00      0.00         7
+       T1499       0.00      0.00      0.00         9
+       T1505       0.00      0.00      0.00        26
+       T1518       0.00      0.00      0.00        32
+       T1528       0.00      0.00      0.00        16
+       T1529       0.00      0.00      0.00         2
+       T1530       0.00      0.00      0.00         4
+       T1534       0.00      0.00      0.00        11
+       T1539       0.00      0.00      0.00         7
+       T1542       0.00      0.00      0.00         2
+       T1543       0.00      0.00      0.00        50
+       T1546       0.00      0.00      0.00         7
+       T1547       0.26      1.00      0.42       124
+       T1548       0.00      0.00      0.00        16
+       T1550       0.00      0.00      0.00        13
+       T1552       0.00      0.00      0.00        33
+       T1553       0.00      0.00      0.00        48
+       T1555       0.00      0.00      0.00        53
+       T1556       0.00      0.00      0.00         5
+       T1557       0.00      0.00      0.00        12
+       T1558       0.00      0.00      0.00         6
+       T1559       0.00      0.00      0.00         5
+       T1560       0.00      0.00      0.00        15
+       T1561       0.00      0.00      0.00         2
+       T1562       0.22      0.11      0.15        64
+       T1564       0.00      0.00      0.00        28
+       T1565       0.00      0.00      0.00         3
+       T1566       0.39      1.00      0.56       183
+       T1567       0.00      0.00      0.00        16
+       T1568       0.00      0.00      0.00        13
+       T1569       0.00      0.00      0.00        23
+       T1570       0.00      0.00      0.00        13
+       T1571       0.00      0.00      0.00        43
+       T1572       0.00      0.00      0.00        14
+       T1573       0.20      0.94      0.34        90
+       T1574       0.00      0.00      0.00        62
+       T1583       0.00      0.00      0.00        56
+       T1584       0.00      0.00      0.00        42
+       T1585       0.00      0.00      0.00        23
+       T1586       0.00      0.00      0.00        18
+       T1587       0.00      0.00      0.00        17
+       T1588       0.00      0.00      0.00        38
+       T1589       0.00      0.00      0.00        27
+       T1590       0.00      0.00      0.00        12
+       T1591       0.00      0.00      0.00         1
+       T1592       0.00      0.00      0.00        14
+       T1595       0.00      0.00      0.00         9
+       T1596       0.00      0.00      0.00         2
+       T1598       0.00      0.00      0.00        14
+       T1606       0.00      0.00      0.00         6
+       T1608       0.00      0.00      0.00        37
+       T1614       0.00      0.00      0.00         5
+     Unknown       0.00      0.00      0.00        35
+
+   micro avg       0.33      0.47      0.39      5064
+   macro avg       0.05      0.12      0.07      5064
+weighted avg       0.19      0.47      0.26      5064
+ samples avg       0.32      0.44      0.36      5064
+
+c:\Users\Admin\Documents\GitHub\data_science\.venv\Lib\site-packages\sklearn\metrics\_classification.py:1833: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+
+# Save model
+trainer.save_model(ARTIFACT_DIR / "otx_transformer")
+
+joblib.dump(
+    mlb,
+    ARTIFACT_DIR / "otx_label_encoder.joblib"
+)
+
+# CVE Modeling
+# Text builder
+def build_cve_text(df):
+    cols = ["vendorProject", "product", "vulnerabilityName", "shortDescription", "requiredAction", "cwes"]
+    present = [c for c in cols if c in df.columns]
+
+    return (df[present].fillna("unknown").astype(str).agg(" ".join, axis=1).str.lower().str.replace(r"\s+", " ", regex=True).str.strip())
+
+cve_train["cve_text"] = build_cve_text(cve_train)
+cve_test["cve_text"] = build_cve_text(cve_test)
+
+# Target
+CVE_TARGET = "knownRansomwareCampaignUse"
+
+def clean_target(x):
+    x = str(x).strip().lower()
+    return int(x in {"known", "yes", "true", "1", "ransomware"})
+
+y_train = cve_train[CVE_TARGET].apply(clean_target)
+y_test = cve_test[CVE_TARGET].apply(clean_target)
+
+# Model
+cve_model = Pipeline([
+    ("tfidf", TfidfVectorizer(
+        ngram_range=(1, 2),
+        max_features=40000,
+        min_df=2,
+        sublinear_tf=True,      # Stabilizes long docs
+        strip_accents="unicode"
+    )),
+    ("clf", LogisticRegression(
+        max_iter=3000,
+        class_weight="balanced",
+        solver="liblinear"      # Stable for small / medium datasets
+    ))
+])
+
+# Train
+cve_model.fit(cve_train["cve_text"], y_train)
+
+# Predict
+probs = cve_model.predict_proba(cve_test["cve_text"])[:, 1]
+preds = (probs >= 0.5).astype(int)
+
+# Evaluation
+print("CVE Accuracy:", accuracy_score(y_test, preds))
+print("CVE F1:", f1_score(y_test, preds))
+print(classification_report(y_test, preds))
+
+# Save
+joblib.dump(cve_model, ARTIFACT_DIR / "cve_tfidf_logreg.joblib")
+
+CVE Accuracy: 0.7570977917981072
+CVE F1: 0.47619047619047616
+              precision    recall  f1-score   support
+
+           0       0.90      0.79      0.84       258
+           1       0.40      0.59      0.48        59
+
+    accuracy                           0.76       317
+   macro avg       0.65      0.69      0.66       317
+weighted avg       0.80      0.76      0.77       317
+
+# Domain Modeling
+DOMAIN_TARGET = "Threat_Severity"
+
+domain_num_cols = [
+    "Domain_Length",
+    "Reputation",
+    "Malicious_Votes",
+    "Suspicious_Votes",
+    "Harmless_Votes",
+    "Undetected_Votes",
+    "Total_Engines"
+]
+
+domain_cat_cols = [
+    "Has_Numbers",
+    "Has_Hyphen",
+    "TLD",
+    "Registrar",
+    "Categories",
+    "Popularity_Rank",
+    "Data_Source"
+]
+
+# Label safety
+y_train = dom_train[DOMAIN_TARGET].astype(str).str.lower()
+y_test = dom_test[DOMAIN_TARGET].astype(str).str.lower()
+
+le = LabelEncoder()
+y_train_enc = le.fit_transform(y_train)
+
+# Handle unseen labels safely
+y_test = y_test.apply(lambda x: x if x in le.classes_ else le.classes_[0])
+y_test_enc = le.transform(y_test)
+
+# Feature reduction
+
+# Keep only top categories to reduce sparsity
+def limit_top_categories(df, col, top_k = 10):
+    top = df[col].value_counts().head(top_k).index
+    df[col] = df[col].where(df[col].isin(top), "other")
+    return df
+
+for c in ["TLD", "Registrar", "Popularity_Rank"]:
+    dom_train = limit_top_categories(dom_train, c)
+    dom_test = limit_top_categories(dom_test, c)
+
+# Preprocessor
+domain_preprocessor = ColumnTransformer([
+    ("num", Pipeline([
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler())
+    ]), domain_num_cols),
+
+    ("cat", Pipeline([
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("onehot", OneHotEncoder(handle_unknown="ignore", min_frequency=2))
+    ]), domain_cat_cols)
+])
+
+# Model
+domain_model = Pipeline([
+    ("prep", domain_preprocessor),
+    ("clf", LogisticRegression(
+        max_iter = 4000,
+        class_weight = "balanced",
+        solver = "lbfgs"
+    ))
+])
+
+# Train
+domain_model.fit(dom_train[domain_num_cols + domain_cat_cols], y_train_enc)
+
+# Predict
+preds = domain_model.predict(dom_test[domain_num_cols + domain_cat_cols])
+
+# Probabilities for ranking use-case
+probs = domain_model.predict_proba(dom_test[domain_num_cols + domain_cat_cols])
+
+# Evaluation
+print("Domain Accuracy:", accuracy_score(y_test_enc, preds))
+print("Domain Macro F1:", f1_score(y_test_enc, preds, average="macro"))
+print(classification_report(y_test_enc, preds, target_names=le.classes_))
+
+Domain Accuracy: 0.8787878787878788
+Domain Macro F1: 0.5270440251572327
+              precision    recall  f1-score   support
+
+        high       0.00      0.00      0.00         2
+         low       1.00      0.96      0.98        27
+      medium       0.50      0.75      0.60         4
+
+    accuracy                           0.88        33
+   macro avg       0.50      0.57      0.53        33
+weighted avg       0.88      0.88      0.88        33
+
+# IP Modeling
+
+# Features
+ip_num_cols = [
+    "Malicious_Votes", "Suspicious_Votes", "Harmless_Votes",
+    "Undetected_Votes", "Total_Reports", "Reputation_Score",
+    "Times_Submitted"
+]
+
+ip_cat_cols = [
+    "Country", "Continent", "ASN", "Owner", "Network",
+    "Threat_Label", "Threat_Category", "Regional_Registry", "TOR_Node"
+]
+
+X_train = ip_train[ip_num_cols + ip_cat_cols].copy() 
+X_test = ip_test[ip_num_cols + ip_cat_cols].copy()
+
+# Target
+y_train = ip_train["Threat_Severity"].astype(str).str.lower()
+y_test = ip_test["Threat_Severity"].astype(str).str.lower()
+
+le_ip = LabelEncoder()
+y_train_enc = le_ip.fit_transform(y_train)
+
+y_test = y_test.apply(lambda x: x if x in le_ip.classes_ else le_ip.classes_[0])
+y_test_enc = le_ip.transform(y_test)
+
+# Preprocessor
+ip_preprocessor = ColumnTransformer([
+    ("num", Pipeline([
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler())
+    ]), ip_num_cols),
+
+    ("cat", Pipeline([
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("onehot", OneHotEncoder(handle_unknown="ignore", min_frequency=2))
+    ]), ip_cat_cols)
+])
+
+# Evaluation
+def evaluate(name, y_true, preds):
+    print(f"\n===== {name} =====")
+    print("Accuracy:", accuracy_score(y_true, preds))
+    print("Macro F1:", f1_score(y_true, preds, average="macro"))
+    print(classification_report(y_true, preds, target_names=le_ip.classes_))
+
+# Model 1: Logistic Regression Baseline
+logreg_model = Pipeline([
+    ("prep", ip_preprocessor),
+    ("clf", LogisticRegression(
+        max_iter=3000,
+        class_weight="balanced",
+        solver="lbfgs"
+    ))
+])
+
+logreg_model.fit(X_train, y_train_enc)
+logreg_preds = logreg_model.predict(X_test)
+
+# Results
+evaluate("Logistic Regression", y_test_enc, logreg_preds)
+
+===== Logistic Regression =====
+Accuracy: 0.975
+Macro F1: 0.8666666666666667
+              precision    recall  f1-score   support
+
+        high       1.00      0.67      0.80         3
+         low       1.00      1.00      1.00        35
+      medium       0.67      1.00      0.80         2
+
+    accuracy                           0.97        40
+   macro avg       0.89      0.89      0.87        40
+weighted avg       0.98      0.97      0.97        40
+
+# Model 2: XGBoost
+xgb_model = Pipeline([
+    ("prep", ip_preprocessor),
+    ("clf", XGBClassifier(
+        n_estimators=200,
+        max_depth=3,
+        learning_rate=0.05,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        reg_lambda=2.0,
+        reg_alpha=0.1,
+        min_child_weight=2,
+        random_state=42,
+        eval_metric="mlogloss"
+    ))
+])
+
+xgb_model.fit(X_train, y_train_enc)
+xgb_preds = xgb_model.predict(X_test)
+
+# Results
+evaluate("XGBoost", y_test_enc, xgb_preds)
+
+===== XGBoost =====
+Accuracy: 0.975
+Macro F1: 0.8666666666666667
+              precision    recall  f1-score   support
+
+        high       1.00      0.67      0.80         3
+         low       1.00      1.00      1.00        35
+      medium       0.67      1.00      0.80         2
+
+    accuracy                           0.97        40
+   macro avg       0.89      0.89      0.87        40
+weighted avg       0.98      0.97      0.97        40
+# Save both models
+joblib.dump(
+    {"model": logreg_model, "label_encoder": le_ip},
+    ARTIFACT_DIR / "ip_logreg_model.joblib"
+)
+
+joblib.dump(
+    {"model": xgb_model, "label_encoder": le_ip},
+    ARTIFACT_DIR / "ip_xgb_model.joblib"
+)
+
+III. Contemplation
+Main Flaw: Predefined inputs → Perfectly computes, Arbitrary inputs (on Internet) → either 0.0 or 10.0 with extremely HIGH - LOW severity

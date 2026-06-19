@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreatLensAI — Scan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/css/tailwind.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: {
+            glow: "0 0 0 1px rgba(148, 163, 184, 0.12), 0 16px 40px rgba(0, 0, 0, 0.35)"
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <main class="mx-auto min-h-screen max-w-7xl px-4 py-6 md:px-8">
+    <header class="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-glow backdrop-panel md:flex-row md:items-center md:justify-between">
+      <div>
+        <a href="./index.html" class="text-xs uppercase tracking-[0.25em] text-cyan-300">ThreatLensAI</a>
+        <h1 class="mt-1 text-2xl font-bold">Scan an IP, domain, CVE, or pulse ID</h1>
+        <p class="mt-1 text-sm text-slate-400">VirusTotal-style verdicts, evidence, and explainability in one interface.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button data-theme-toggle type="button" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white hover:bg-slate-700">☀️ Light</button>
+        <a href="./results.html" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white hover:bg-slate-700">Results</a>
+      </div>
+    </header>
+    <div id="modelHealthBar" class="mb-4"></div>
+
+    <section class="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-glow">
+        <div class="mb-6">
+          <div class="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+            Paste and scan
+          </div>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-white">Find malicious activity fast</h2>
+          <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+            Enter a suspicious indicator and get a verdict, confidence, engine breakdown, and explainability notes.
+          </p>
+        </div>
+
+        <form id="scanForm" class="space-y-4">
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-3 scan-glow">
+            <label class="sr-only" for="searchInput">Scan input</label>
+            <textarea
+              id="searchInput"
+              rows="3"
+              maxlength="2000"
+              placeholder="Paste an IP, domain, CVE, or OTX pulse ID..."
+              class="w-full resize-none rounded-2xl border border-transparent bg-transparent px-4 py-4 text-lg text-white outline-none placeholder:text-slate-600"
+            ></textarea>
+            <div class="flex justify-end px-2">
+              <span id="charCounter" class="text-xs text-slate-500">0 / 2000</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 md:flex-row md:items-center">
+            <button id="scanButton" type="button" class="rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">
+              Scan
+            </button>
+            <p id="scanHint" class="text-sm text-slate-500">Supported: IP, domain, CVE, OTX pulse ID.</p>
+          </div>
+        </form>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <span class="text-xs text-slate-500">Demo:</span>
+          <button type="button" data-quick-query="CVE-2024-3094" data-quick-dry-run="true" class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700">CVE (xz backdoor)</button>
+          <button type="button" data-quick-query="185.220.101.42" data-quick-dry-run="true" class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700">IP (Tor exit)</button>
+          <button type="button" data-quick-query="doubleclick.net" data-quick-dry-run="true" class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700">Domain (tracker)</button>
+          <button type="button" data-quick-query="CVE-2017-0144" data-quick-dry-run="true" class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700">CVE (EternalBlue)</button>
+        </div>
+
+        <div id="scanPreview" class="mt-6"></div>
+      </div>
+
+      <aside class="space-y-6">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-glow">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Recent scans</h2>
+            <span class="text-xs text-slate-500">Local browser history</span>
+          </div>
+          <div id="recentScans" class="mt-4 space-y-3"></div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-glow">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Tip of the day</h2>
+            <span class="text-xs text-slate-500">Daily security insight</span>
+          </div>
+          <div id="tipOfTheDayContent" class="mt-4 space-y-3"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="./assets/js/api.js?v=2"></script>
+  <script src="./assets/js/theme.js?v=2"></script>
+  <script src="./assets/js/search.js"></script>
+  <script src="./assets/js/ui.js"></script>
+  <script>
+    window.ThreatLensTheme.init();
+    window.ThreatLensSearch.init();
+    window.ThreatLensUI.init();
+  </script>
+</body>
+</html>

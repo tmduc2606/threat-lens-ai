@@ -1,0 +1,39 @@
+from __future__ import annotations
+
+import logging
+from typing import Any, Dict, Optional
+
+from .base_client import BaseAPIClient
+from ...config import get_settings
+
+logger = logging.getLogger(__name__)
+
+
+class URLhausClient(BaseAPIClient):
+    def __init__(self):
+        settings = get_settings()
+        self.auth_key = settings.urlhaus_auth_key
+        headers = {}
+        if self.auth_key:
+            headers["Auth-Key"] = self.auth_key
+        super().__init__(base_url="https://urlhaus-api.abuse.ch/v1", headers=headers, timeout=15.0)
+
+    async def check_host(self, host: str) -> Optional[Dict[str, Any]]:
+        if not self.auth_key:
+            logger.warning("URLhaus auth key not configured. Skipping.")
+            return None
+
+        response = await self._request("POST", f"host/{host}")
+        if response and response.status_code == 200:
+            return response.json()
+        return None
+
+    async def check_url(self, url: str) -> Optional[Dict[str, Any]]:
+        if not self.auth_key:
+            logger.warning("URLhaus auth key not configured. Skipping.")
+            return None
+
+        response = await self._request("POST", "url", json_data={"url": url})
+        if response and response.status_code == 200:
+            return response.json()
+        return None

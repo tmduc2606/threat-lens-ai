@@ -1,0 +1,488 @@
+ThreatLensAI - Comprehensive Preprocessing & Modeling Evaluation - Establishing Thorough Overhaul 
+
+I. Preprocessing Pipeline Effiency & Precision
+
+- Prerequisites: Read "data_science/notebooks/01_eda_and_inspection.ipynb, 02_preprocessing_and_feature_engineering.ipynb, 03_modeling_and_evaluation.ipynb"
+
+- Statistics (After Preprocessing):
+
+1. OTX
+
+- Row Samples: 
+Pulse_ID	Title	Description	Created	Modified	TLP	Tags	Malware_Families	Attack_IDs	Industries	...	indicator_t1204	indicator_t1003	indicator_t1566	indicator_t1059	indicator_t1547	indicator_t1218	indicator_t1053	indicator_t1047	Attack_List	combined_text
+0	69f1e236e4e192f639298d53	multi-stage malware execution chain analysis	a sophisticated multi-stage malware execution ...	2026-04-29 10:49:26.327	2026-04-29 10:50:57.999	white	payload extraction, c2 communication, defense ...	unknown	T1036.005, T1082, T1071, T1140, T1036, T1055, ...	unknown	...	0	0	0	0	0	0	0	0	[t1027, t1036, t1041, t1055, t1059, t1071, t10...	multi-stage malware execution chain analysis a...
+1	69f1de85544538ce8b03332a	user interaction with a clickfix-style phishin...	a clickfix-style phishing campaign leveraged s...	2026-04-29 10:33:41.967	2026-04-29 10:44:36.742	white	phishing, lumma stealer, powershell, informati...	hijackloader, lumma stealer - s1213, lummastealer	T1218.007, T1005, T1555, T1036, T1055, T1059, ...	unknown	...	0	0	1	1	0	0	0	0	[t1005, t1027, t1036, t1041, t1055, t1059, t10...	user interaction with a clickfix-style phishin...
+2	69f1d20216d6091f01f8a6eb	kyber ransomware is not just post-quantum name...	a detailed technical analysis confirms that ky...	2026-04-29 09:40:17.996	2026-04-29 10:14:38.724	white	post-quantum cryptography, x25519, aes-ctr enc...	kyber	T1489, T1135, T1082, T1112, T1070.001, T1222, ...	defense, technology	...	0	0	0	0	0	0	0	0	[t1027, t1059, t1070, t1082, t1083, t1112, t11...	kyber ransomware is not just post-quantum name...
+3	69f1d26f3c7a8e098eccb448	rebex-based telegram rat targeting vietnam	a sophisticated chm-based malware campaign has...	2026-04-29 09:42:07.871	2026-04-29 10:13:37.390	white	multi-stage payload, telegram rat, chm infecti...	unknown	T1053.005, T1036.005, T1204.002, T1497.001, T1...	unknown	...	0	0	0	0	0	0	0	0	[t1027, t1036, t1053, t1059, t1071, t1082, t11...	rebex-based telegram rat targeting vietnam a s...
+4	69f1d2d45ec26fc5e1ca72f4	kycshadow: an android banking malware exploiti...	an android malware campaign masquerading as a ...	2026-04-29 09:43:48.542	2026-04-29 10:12:57.758	white	india targeting, android banking trojan, otp t...	kycshadow	Unknown	finance	...	0	0	0	0	0	0	0	0	[unknown]	kycshadow: an android banking malware exploiti...
+
+- Description:
+Created	Modified	Created_year	Created_month	pulse_age_days	log_pulse_age	TLP_encoded	malware_unknown	malware_cobalt_strike___s0154	malware_lumma_stealer	...	indicator_t1055	indicator_t1574	indicator_t1204	indicator_t1003	indicator_t1566	indicator_t1059	indicator_t1547	indicator_t1218	indicator_t1053	indicator_t1047
+count	2351	2351	2351.000000	2351.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	...	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000	2352.000000
+mean	2025-06-20 21:46:45.846985472	2025-07-16 14:24:43.075580416	2024.969800	6.492556	25.050595	1.711141	0.001276	0.276786	0.025935	0.021684	...	0.034864	0.025085	0.005527	0.008503	0.280187	0.092687	0.000850	0.001276	0.010629	0.000850
+min	2015-01-19 18:20:52.140000	2024-09-04 08:03:43.335000	2015.000000	1.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	...	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000
+25%	2025-01-31 01:02:23.412000	2025-02-21 09:01:55.753999872	2025.000000	3.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	...	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000
+50%	2025-06-26 17:27:51.777999872	2025-07-16 19:07:42.348999936	2025.000000	7.000000	2.000000	1.098612	0.000000	0.000000	0.000000	0.000000	...	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000
+75%	2025-11-26 23:06:06.332499968	2025-12-10 15:13:54.863500032	2025.000000	10.000000	29.000000	3.401197	0.000000	1.000000	0.000000	0.000000	...	0.000000	0.000000	0.000000	0.000000	1.000000	0.000000	0.000000	0.000000	0.000000	0.000000
+max	2026-04-29 10:49:26.327000	2026-04-29 18:04:13.405000	2026.000000	12.000000	3802.000000	8.243546	1.000000	1.000000	1.000000	1.000000	...	1.000000	1.000000	1.000000	1.000000	1.000000	1.000000	1.000000	1.000000	1.000000	1.000000
+std	NaN	NaN	0.754802	3.587545	142.362106	1.746823	0.035699	0.447505	0.158976	0.145679	...	0.183474	0.156417	0.074155	0.091841	0.449186	0.290055	0.029154	0.035699	0.102571	0.029154
+
+2. CVE
+
+- CVE List:
+['cwe-22', 'cwe-693', 'cwe-77', 'cwe-22, cwe-434', 'cwe-862', 'cwe-306', 'cwe-1220', 'cwe-648', 'cwe-200', 'cwe-287', 'cwe-79', 'cwe-257', 'cwe-23', 'cwe-20, cwe-94', 'cwe-94', 'cwe-20', 'cwe-426', 'cwe-59', 'cwe-502', 'cwe-125', 'cwe-416', 'cwe-89', 'cwe-1321', 'cwe-284', 'cwe-494', 'cwe-121', 'cwe-506', 'cwe-94, cwe-95, cwe-306', 'cwe-667', 'cwe-120', 'cwe-119', 'cwe-209', 'cwe-787', 'cwe-913', 'cwe-918', 'cwe-288', 'cwe-522', 'cwe-190', 'cwe-25, cwe-282', 'cwe-78', 'cwe-798', 'cwe-434', 'unknown', 'cwe-476', 'cwe-269', 'cwe-843', 'cwe-807', 'cwe-88', 'cwe-98', 'cwe-200, cwe-284', 'cwe-130', 'cwe-862, cwe-250', 'cwe-347', 'cwe-611', 'cwe-362', 'cwe-552', 'cwe-267', 'cwe-95', 'cwe-940', 'cwe-324', 'cwe-822', 'cwe-306, cwe-77', 'cwe-829', 'cwe-502, cwe-77', 'cwe-367', 'cwe-290', 'cwe-863', 'cwe-89, cwe-288', 'cwe-59, cwe-436', 'cwe-35', 'cwe-399', 'cwe-352', 'cwe-74', 'cwe-420', 'cwe-158', 'cwe-918, cwe-807', 'cwe-77, cwe-88', 'cwe-528', 'cwe-1188', 'cwe-282', 'cwe-73', 'cwe-125, cwe-787', 'cwe-472', 'cwe-124', 'cwe-122', 'cwe-912', 'cwe-424', 'cwe-116', 'cwe-321', 'cwe-305', 'cwe-44, cwe-502', 'cwe-36', 'cwe-653', 'cwe-190, cwe-122', 'cwe-532', 'cwe-707', 'cwe-123', 'cwe-908', 'cwe-404', 'cwe-647', 'cwe-114', 'cwe-425', 'cwe-444', 'cwe-754', 'cwe-276', 'cwe-250, cwe-273', 'cwe-772', 'cwe-134', 'cwe-287, cwe-303', 'cwe-264', 'cwe-191', 'cwe-451', 'cwe-358', 'cwe-27', 'cwe-591', 'cwe-1393', 'cwe-184', 'cwe-1287', 'cwe-203', 'cwe-1336', 'cwe-80', 'cwe-783', 'cwe-835', 'cwe-20, cwe-77', 'cwe-280', 'cwe-303', 'cwe-823', 'cwe-473', 'cwe-400', 'cwe-295', 'cwe-703', 'cwe-668', 'cwe-351', 'cwe-502, cwe-122', 'cwe-917', 'cwe-401', 'cwe-79, cwe-138', 'cwe-79, cwe-116', 'cwe-20, cwe-79', 'cwe-20, cwe-787', 'cwe-294', 'cwe-94, cwe-502', 'cwe-78, cwe-259', 'cwe-441', 'cwe-197', 'cwe-755', 'cwe-664', 'cwe-122, cwe-843', 'cwe-502, cwe-790', 'cwe-274', 'cwe-427', 'cwe-749', 'cwe-78, cwe-88, cwe-158', 'cwe-353, cwe-641', 'cwe-189', 'cwe-610', 'cwe-732', 'cwe-310', 'cwe-22, cwe-138', 'cwe-20, cwe-502', 'cwe-22, cwe-59', 'cwe-824', 'cwe-93', 'cwe-190, cwe-787', 'cwe-415', 'cwe-19', 'cwe-79, cwe-80', 'cwe-20, cwe-77, cwe-78', 'cwe-704', 'cwe-281', 'cwe-923', 'cwe-362, cwe-416', 'cwe-1386', 'cwe-665', 'cwe-250', 'cwe-787, cwe-1285', 'cwe-77, cwe-78', 'cwe-326', 'cwe-122, cwe-193', 'cwe-20, cwe-125', 'cwe-285', 'cwe-782', 'cwe-601', 'cwe-306, cwe-406', 'cwe-40, cwe-1386', 'cwe-755, cwe-78', 'cwe-22, cwe-73', 'cwe-20, cwe-918', 'cwe-255', 'cwe-785', 'cwe-388', 'cwe-254', 'cwe-269, cwe-59', 'cwe-78, cwe-138', 'cwe-25, cwe-96', 'cwe-1188, cwe-306', 'cwe-20, cwe-400, cwe-502', 'cwe-184, cwe-502', 'cwe-357', 'cwe-20, cwe-78', 'cwe-89, cwe-138', 'cwe-20, cwe-190', 'cwe-362, cwe-667', 'cwe-1173', 'cwe-20, cwe-95', 'cwe-178, cwe-287', 'cwe-122, cwe-362', 'cwe-787, cwe-843', 'cwe-122, cwe-755', 'cwe-20, cwe-122', 'cwe-706', 'cwe-1390', 'cwe-497', 'cwe-122, cwe-1285', 'cwe-131', 'cwe-787, cwe-823', 'cwe-191, cwe-787', 'cwe-20, cwe-434', 'cwe-416, cwe-787', 'cwe-330', 'cwe-39', 'cwe-91', 'cwe-390', 'cwe-521', 'cwe-306, cwe-94', 'cwe-287, cwe-697', 'cwe-20, cwe-470, cwe-918', 'cwe-55']
+
+- Row Samples:
+ cveID	vendorProject	product	vulnerabilityName	dateAdded	shortDescription	requiredAction	dueDate	knownRansomwareCampaignUse	cwes	dateAdded_year	dateAdded_month	dateAdded_day	cwe_list	days_to_due	log_days_to_due	days_since_added	log_days_since_added	risk_text	meta_text
+0	CVE-2024-1708	connectwise	screenconnect	connectwise screenconnect path traversal vulne...	2026-04-28	connectwise screenconnect contains a path trav...	apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	cwe-22	2026	4	28	[CWE-22]	14	2.708050	0	0.000000	connectwise screenconnect path traversal vulne...	connectwise screenconnect
+1	CVE-2026-32202	microsoft	windows	microsoft windows protection mechanism failure...	2026-04-28	microsoft windows shell contains a protection ...	apply mitigations per vendor instructions, fol...	2026-05-12	Unknown	cwe-693	2026	4	28	[CWE-693]	14	2.708050	0	0.000000	microsoft windows protection mechanism failure...	microsoft windows
+2	CVE-2025-29635	d-link	dir-823x	d-link dir-823x command injection vulnerability	2026-04-24	d-link dir-823x contains a command injection v...	apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	cwe-77	2026	4	24	[CWE-77]	14	2.708050	4	1.609438	d-link dir-823x command injection vulnerabilit...	d-link dir-823x
+3	CVE-2024-7399	samsung	magicinfo 9 server	samsung magicinfo 9 server path traversal vuln...	2026-04-24	samsung magicinfo 9 server contains a path tra...	apply mitigations per vendor instructions, fol...	2026-05-08	Unknown	cwe-22, cwe-434	2026	4	24	[CWE-22, CWE-434]	14	2.708050	4	1.609438	samsung magicinfo 9 server path traversal vuln...	samsung magicinfo 9 server
+
+- Description:
+dateAdded	dueDate	dateAdded_year	dateAdded_month	dateAdded_day	days_to_due	log_days_to_due	days_since_added	log_days_since_added
+count	1585	1585	1585.000000	1585.000000	1585.000000	1585.000000	1585.000000	1585.000000	1585.000000
+mean	2023-05-13 00:20:53.753943296	2023-06-27 08:42:23.848580352	2022.875079	6.459306	13.076341	45.348265	3.322813	1080.985489	6.687181
+min	2021-11-03 00:00:00	2021-11-17 00:00:00	2021.000000	1.000000	1.000000	1.000000	0.693147	0.000000	0.000000
+25%	2022-03-03 00:00:00	2022-05-03 00:00:00	2022.000000	3.000000	3.000000	21.000000	3.091042	567.000000	6.342121
+50%	2022-08-11 00:00:00	2022-09-07 00:00:00	2022.000000	6.000000	11.000000	21.000000	3.091042	1356.000000	7.213032
+75%	2024-10-08 00:00:00	2024-10-29 00:00:00	2024.000000	11.000000	22.000000	21.000000	3.091042	1517.000000	7.325149
+max	2026-04-28 00:00:00	2026-05-12 00:00:00	2026.000000	12.000000	31.000000	184.000000	5.220356	1637.000000	7.401231
+std	NaN	NaN	1.558875	3.651451	9.174300	59.880541	0.885363	546.839487	1.044337
+
+3. Domains
+
+- Row Samples:
+Domain	TLD	Domain_Length	Has_Numbers	Has_Hyphen	Registrar	Creation_Date	Last_Update_Date	Reputation	Malicious_Votes	...	is_randomized_domain	malicious_ratio	suspicious_ratio	log_malicious	log_suspicious	tld_risk_score	has_creation_date	has_registrar	has_nameservers	whois_field_count
+0	urlhaus.abuse.ch	ch	16	0	0	Unknown	NaT	NaT	2	0	...	0	0.000000	0.000000	0.000000	0.000000	0	0	0	0	2
+1	bazaar.abuse.ch	ch	15	0	0	Unknown	NaT	NaT	6	1	...	0	0.010989	0.000000	0.693147	0.000000	0	0	0	0	2
+2	feodotracker.abuse.ch	ch	21	0	0	Unknown	NaT	NaT	1	0	...	0	0.000000	0.000000	0.000000	0.000000	0	0	0	0	2
+3	sslbl.abuse.ch	ch	14	0	0	Unknown	NaT	NaT	0	0	...	0	0.000000	0.000000	0.000000	0.000000	0	0	0	0	2
+4	threatfox.abuse.ch	ch	18	0	0	Unknown	NaT	NaT	0	0	...	0	0.000000	0.000000	0.000000	0.000000	0	0	0	0	2
+
+- Description:
+Domain_Length	Has_Numbers	Has_Hyphen	Creation_Date	Last_Update_Date	Reputation	Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	...	is_randomized_domain	malicious_ratio	suspicious_ratio	log_malicious	log_suspicious	tld_risk_score	has_creation_date	has_registrar	has_nameservers	whois_field_count
+count	162.000000	162.00000	162.000000	120	128	162.000000	162.000000	162.000000	162.000000	162.000000	...	162.0	162.000000	162.000000	162.000000	162.000000	162.000000	162.000000	162.000000	162.0	162.000000
+mean	15.820988	0.04321	0.537037	2017-10-03 15:53:55.516666624	2024-03-31 00:56:53.250000128	0.654321	1.308642	0.228395	43.209877	46.253086	...	0.0	0.014381	0.002510	0.404551	0.150481	0.765432	0.740741	0.555556	0.0	3.530864
+min	6.000000	0.00000	0.000000	2002-07-17 22:54:40	2014-12-04 15:13:36	-47.000000	0.000000	0.000000	0.000000	29.000000	...	0.0	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.000000	0.0	2.000000
+25%	12.000000	0.00000	0.000000	2014-06-13 02:26:41	2023-09-20 21:20:21.750000128	0.000000	0.000000	0.000000	46.000000	33.000000	...	0.0	0.000000	0.000000	0.000000	0.000000	1.000000	0.000000	0.000000	0.0	3.000000
+50%	16.000000	0.00000	1.000000	2017-10-10 20:55:14	2025-07-02 14:39:55.500000	0.000000	0.000000	0.000000	55.000000	34.000000	...	0.0	0.000000	0.000000	0.000000	0.000000	1.000000	1.000000	1.000000	0.0	4.000000
+75%	19.000000	0.00000	1.000000	2023-01-31 18:00:00	2025-11-29 18:00:00	0.000000	1.000000	0.000000	57.000000	41.750000	...	0.0	0.010989	0.000000	0.693147	0.000000	1.000000	1.000000	1.000000	0.0	4.000000
+max	28.000000	1.00000	1.000000	2026-04-02 00:00:00	2026-04-05 05:23:09	140.000000	17.000000	3.000000	61.000000	91.000000	...	0.0	0.186813	0.032967	2.890372	1.386294	2.000000	1.000000	1.000000	0.0	4.000000
+std	4.748199	0.20396	0.500173	NaN	NaN	13.143886	3.340480	0.489323	23.030747	23.698759	...	0.0	0.036709	0.005377	0.750302	0.306056	0.453327	0.439587	0.498445	0.0	0.812731
+
+4. IPs
+
+- Numerical Features:
+['Malicious_Votes', 'Suspicious_Votes', 'Harmless_Votes', 'Undetected_Votes', 'Total_Reports', 'Reputation_Score', 'Times_Submitted', 'Last_Analysis_Date_year', 'Last_Analysis_Date_month', 'Last_Analysis_Date_day', 'asn_risk_flag', 'malicious_ratio', 'suspicious_ratio', 'log_malicious', 'log_suspicious', 'log_harmless', 'log_undetected', 'reputation_score_scaled', 'tor_flag', 'high_risk_country', 'unknown_continent', 'negative_reputation', 'zero_votes']
+
+- Row Samples:
+IP	Country	Continent	ASN	Owner	Network	Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	...	log_suspicious	log_harmless	log_undetected	reputation_score_scaled	tor_flag	ip_first_octet	high_risk_country	unknown_continent	negative_reputation	zero_votes
+0	176.10.99.200	ch	eu	51395.0	datasource ag	176.10.96.0/19	3	0	55	33	...	0.000000	4.025352	3.526361	0.686047	0	176	0	0	1	0
+1	176.10.99.201	ch	eu	51395.0	datasource ag	176.10.96.0/19	0	1	53	37	...	0.693147	3.988984	3.637586	0.988372	0	176	0	0	0	0
+2	77.247.181.162	nl	eu	43350.0	nforce entertainment b.v.	77.247.176.0/21	4	1	53	33	...	0.693147	3.988984	3.526361	0.767442	0	77	0	0	1	0
+3	77.247.181.163	nl	eu	43350.0	nforce entertainment b.v.	77.247.176.0/21	2	2	55	32	...	1.098612	4.025352	3.496508	0.802326	0	77	0	0	1	0
+4	199.87.154.255	ca	unknown	18451.0	les.net	199.87.152.0/21	2	0	54	35	...	0.000000	4.007333	3.583519	0.976744	0	199	0	1	1	0
+
+- Description:
+
+Malicious_Votes	Suspicious_Votes	Harmless_Votes	Undetected_Votes	Total_Reports	Reputation_Score	Times_Submitted	Last_Analysis_Date	Last_Analysis_Date_year	Last_Analysis_Date_month	...	log_malicious	log_suspicious	log_harmless	log_undetected	reputation_score_scaled	tor_flag	high_risk_country	unknown_continent	negative_reputation	zero_votes
+count	200.000000	200.000000	200.000000	200.000000	200.0	200.000000	200.0	200	200.000000	200.000000	...	200.000000	200.000000	200.000000	200.000000	200.000000	200.000000	200.000000	200.000000	200.000000	200.0
+mean	1.500000	0.295000	24.285000	64.920000	91.0	-2.020000	0.0	2025-01-07 02:25:32.769999872	2024.650000	4.995000	...	0.418897	0.165449	1.853090	4.082866	0.964884	0.055000	0.080000	0.240000	0.135000	0.0
+min	0.000000	0.000000	0.000000	28.000000	91.0	-85.000000	0.0	2018-12-26 14:02:21	2018.000000	1.000000	...	0.000000	0.000000	0.000000	3.367296	0.000000	0.000000	0.000000	0.000000	0.000000	0.0
+25%	0.000000	0.000000	0.000000	35.000000	91.0	0.000000	0.0	2024-04-17 08:28:53	2024.000000	4.000000	...	0.000000	0.000000	0.000000	3.583519	0.988372	0.000000	0.000000	0.000000	0.000000	0.0
+50%	0.000000	0.000000	0.000000	91.000000	91.0	0.000000	0.0	2026-02-11 22:13:19.500000	2026.000000	4.500000	...	0.000000	0.000000	0.000000	4.521789	0.988372	0.000000	0.000000	0.000000	0.000000	0.0
+75%	1.000000	0.000000	54.000000	91.000000	91.0	0.000000	0.0	2026-04-28 04:43:15.750000128	2026.000000	5.000000	...	0.693147	0.000000	4.007333	4.521789	0.988372	0.000000	0.000000	0.000000	0.000000	0.0
+max	21.000000	4.000000	58.000000	91.000000	91.0	1.000000	0.0	2026-05-01 10:44:10	2026.000000	12.000000	...	3.091042	1.609438	4.077537	4.521789	1.000000	1.000000	1.000000	1.000000	1.000000	0.0
+std	3.692992	0.742111	26.276148	28.099493	0.0	8.546038	0.0	NaN	1.922493	2.352156	...	0.814499	0.377332	1.980896	0.475321	0.099373	0.228552	0.271974	0.428155	0.342581	0.0
+
+II. Modeling Pipleine Efficiency
+
+- Statistics (Modeling):
+
+1. OTX
+
++ Classical Baseline Evaluation (MultiLabelBinarizer, TF-IDF, OneVsRest Classifier w/ XGBoost)
+OTX Micro F1: 0.30516644072902543
+OTX Macro F1: 0.10228789651528185
+OTX Hamming Loss: 0.07711854489526389
+              precision    recall  f1-score   support
+
+       t1001       0.00      0.00      0.00         7
+       t1003       0.44      0.11      0.17        38
+       t1005       0.50      0.05      0.09        61
+       t1007       0.00      0.00      0.00         7
+       t1012       1.00      0.03      0.05        36
+       t1014       0.00      0.00      0.00         5
+       t1016       0.25      0.02      0.03        56
+       t1018       0.00      0.00      0.00        18
+       t1020       0.00      0.00      0.00        13
+       t1021       0.67      0.18      0.28        67
+       t1027       0.68      0.49      0.57       222
+       t1033       0.00      0.00      0.00        36
+       t1036       0.23      0.02      0.04       139
+       t1041       0.00      0.00      0.00        48
+       t1046       1.00      0.04      0.08        24
+       t1047       1.00      0.12      0.22         8
+       t1048       0.00      0.00      0.00         8
+       t1049       0.00      0.00      0.00         7
+       t1053       1.00      0.04      0.07        77
+       t1055       0.70      0.22      0.34       134
+       t1056       0.76      0.13      0.22       122
+       t1057       0.60      0.04      0.08        71
+       t1059       0.73      0.93      0.82       314
+       t1064       0.00      0.00      0.00         3
+       t1068       0.67      0.11      0.18        19
+       t1069       0.00      0.00      0.00         8
+       t1070       0.73      0.13      0.22        63
+       t1071       0.54      0.24      0.33       171
+       t1072       0.00      0.00      0.00         7
+       t1074       0.00      0.00      0.00        36
+       t1078       0.50      0.17      0.25       123
+       t1082       0.60      0.23      0.34       142
+       t1083       0.28      0.09      0.13       113
+       t1087       0.00      0.00      0.00        44
+       t1090       1.00      0.03      0.05        36
+       t1095       0.00      0.00      0.00        31
+       t1098       0.00      0.00      0.00        11
+       t1102       0.00      0.00      0.00       111
+       t1105       0.61      0.08      0.15       130
+       t1106       0.00      0.00      0.00        23
+       t1110       0.33      0.06      0.10        18
+       t1112       0.00      0.00      0.00        49
+       t1113       0.40      0.04      0.07        53
+       t1114       0.00      0.00      0.00        15
+       t1115       0.00      0.00      0.00        17
+       t1119       0.00      0.00      0.00         9
+       t1123       0.00      0.00      0.00         5
+       t1124       0.00      0.00      0.00         3
+       t1125       0.00      0.00      0.00         5
+       t1129       0.00      0.00      0.00        11
+       t1132       0.33      0.02      0.03        64
+       t1133       0.40      0.05      0.08        43
+       t1134       0.00      0.00      0.00        16
+       t1135       0.00      0.00      0.00         8
+       t1136       0.00      0.00      0.00        17
+       t1140       0.53      0.15      0.24       137
+       t1176       0.00      0.00      0.00        11
+       t1185       0.50      0.05      0.10        19
+       t1189       0.00      0.00      0.00        26
+       t1190       0.68      0.38      0.49        73
+       t1192       0.00      0.00      0.00         4
+       t1193       0.00      0.00      0.00         5
+       t1195       0.50      0.15      0.24        13
+       t1199       0.00      0.00      0.00        11
+       t1203       0.00      0.00      0.00         7
+       t1204       0.70      0.46      0.56       210
+       t1205       0.00      0.00      0.00         6
+       t1210       0.00      0.00      0.00         9
+       t1213       0.00      0.00      0.00        12
+       t1217       0.00      0.00      0.00         4
+       t1218       0.00      0.00      0.00        42
+       t1219       0.00      0.00      0.00        34
+       t1222       0.00      0.00      0.00         2
+       t1482       0.00      0.00      0.00         3
+       t1485       0.00      0.00      0.00         5
+       t1486       0.69      0.86      0.77        36
+       t1489       0.50      0.06      0.11        16
+       t1490       0.57      0.57      0.57        23
+       t1496       0.50      0.18      0.27        11
+       t1497       0.00      0.00      0.00        56
+       t1498       0.80      0.44      0.57         9
+       t1499       0.00      0.00      0.00         3
+       t1505       0.67      0.16      0.26        25
+       t1518       1.00      0.06      0.11        36
+       t1528       0.00      0.00      0.00        19
+       t1530       0.00      0.00      0.00         3
+       t1534       0.50      0.20      0.29         5
+       t1539       0.00      0.00      0.00         6
+       t1542       0.00      0.00      0.00         4
+       t1543       0.00      0.00      0.00        50
+       t1546       0.00      0.00      0.00         7
+       t1547       0.61      0.20      0.30       137
+       t1548       0.00      0.00      0.00        11
+       t1550       0.00      0.00      0.00        11
+       t1552       0.00      0.00      0.00        39
+       t1553       0.25      0.02      0.04        48
+       t1555       0.64      0.15      0.24        61
+       t1556       0.00      0.00      0.00         6
+       t1557       0.00      0.00      0.00        10
+       t1559       0.00      0.00      0.00         5
+       t1560       0.00      0.00      0.00        13
+       t1562       0.67      0.10      0.18        58
+       t1564       0.00      0.00      0.00        19
+       t1566       0.81      0.60      0.69       183
+       t1567       0.00      0.00      0.00        22
+       t1568       0.00      0.00      0.00        12
+       t1569       0.00      0.00      0.00        21
+       t1570       0.00      0.00      0.00         8
+       t1571       0.80      0.07      0.12        59
+       t1572       0.00      0.00      0.00         9
+       t1573       0.55      0.06      0.11        96
+       t1574       0.40      0.04      0.07        56
+       t1583       0.58      0.17      0.26        42
+       t1584       0.44      0.23      0.30        31
+       t1585       1.00      0.23      0.38        26
+       t1586       0.00      0.00      0.00        16
+       t1587       0.00      0.00      0.00        19
+       t1588       0.00      0.00      0.00        44
+       t1589       0.44      0.18      0.26        22
+       t1590       0.00      0.00      0.00        10
+       t1592       1.00      0.06      0.11        17
+       t1595       0.00      0.00      0.00         8
+       t1598       0.40      0.15      0.22        13
+       t1606       0.00      0.00      0.00         2
+       t1608       0.40      0.06      0.11        31
+       t1614       0.00      0.00      0.00         5
+     unknown       0.25      0.03      0.05        33
+
+   micro avg       0.64      0.20      0.31      5067
+   macro avg       0.26      0.08      0.10      5067
+weighted avg       0.47      0.20      0.24      5067
+ samples avg       0.62      0.20      0.28      5067
+
++ CodeBERT - Structured Features Approach
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 17686.61it/s]
+Batches: 100%|██████████| 118/118 [13:13<00:00,  6.72s/it]
+Batches: 100%|██████████| 30/30 [03:01<00:00,  6.05s/it]
+CodeBERT embedding shape: (1881, 768)
+
+Combined feature shape: (1881, 771)
+
+Epoch 5: loss=1.3179
+Epoch 10: loss=1.3153
+Epoch 15: loss=1.3137
+Epoch 20: loss=1.3071
+
+OTX CodeBERT Micro F1: 0.17773051233254972
+OTX CodeBERT Macro F1: 0.14760790726784367
+              precision    recall  f1-score   support
+
+       t1001       0.02      0.29      0.04         7
+       t1003       0.08      1.00      0.15        38
+       t1005       0.14      0.92      0.24        61
+       t1007       0.02      0.86      0.03         7
+       t1012       0.08      1.00      0.14        36
+       t1014       0.01      1.00      0.02         5
+       t1016       0.12      1.00      0.21        56
+       t1018       0.04      0.61      0.08        18
+       t1020       0.03      1.00      0.05        13
+       t1021       0.14      1.00      0.25        67
+       t1027       0.47      1.00      0.64       222
+       t1033       0.08      1.00      0.14        36
+       t1036       0.30      1.00      0.46       139
+       t1041       0.13      0.60      0.21        48
+       t1046       0.05      1.00      0.10        24
+       t1047       0.04      0.62      0.07         8
+       t1048       0.02      0.62      0.04         8
+       t1049       0.02      1.00      0.03         7
+       t1053       0.17      1.00      0.28        77
+       t1055       0.29      1.00      0.44       134
+       t1056       0.26      1.00      0.41       122
+       t1057       0.15      1.00      0.26        71
+       t1059       0.67      1.00      0.80       314
+       t1064       0.01      1.00      0.01         3
+       t1068       0.04      1.00      0.08        19
+       t1069       0.02      1.00      0.03         8
+       t1070       0.13      1.00      0.24        63
+       t1071       0.36      1.00      0.53       171
+       t1072       0.01      1.00      0.03         7
+       t1074       0.08      1.00      0.14        36
+       t1078       0.27      0.98      0.42       123
+       t1082       0.31      0.97      0.47       142
+       t1083       0.24      1.00      0.39       113
+       t1087       0.09      1.00      0.17        44
+       t1090       0.08      0.78      0.15        36
+       t1095       0.07      1.00      0.12        31
+       t1098       0.02      1.00      0.05        11
+       t1102       0.24      1.00      0.38       111
+       t1105       0.28      1.00      0.43       130
+       t1106       0.06      0.43      0.11        23
+       t1110       0.04      1.00      0.08        18
+       t1112       0.10      1.00      0.19        49
+       t1113       0.11      0.98      0.20        53
+       t1114       0.05      0.33      0.08        15
+       t1115       0.04      0.71      0.07        17
+       t1119       0.02      1.00      0.04         9
+       t1123       0.01      1.00      0.02         5
+       t1124       0.01      1.00      0.01         3
+       t1125       0.02      0.60      0.03         5
+       t1129       0.03      0.82      0.05        11
+       t1132       0.14      1.00      0.24        64
+       t1133       0.18      0.28      0.22        43
+       t1134       0.03      1.00      0.07        16
+       t1135       0.13      0.25      0.17         8
+       t1136       0.04      1.00      0.07        17
+       t1140       0.29      1.00      0.45       137
+       t1176       0.03      0.91      0.06        11
+       t1185       0.06      0.16      0.09        19
+       t1189       0.06      0.92      0.11        26
+       t1190       0.16      1.00      0.27        73
+       t1192       0.01      0.50      0.02         4
+       t1193       0.03      0.20      0.06         5
+       t1195       0.03      0.77      0.06        13
+       t1199       0.03      0.82      0.05        11
+       t1203       0.02      1.00      0.03         7
+       t1204       0.45      1.00      0.62       210
+       t1205       0.02      0.50      0.04         6
+       t1210       0.02      1.00      0.04         9
+       t1213       0.03      1.00      0.05        12
+       t1217       0.03      0.75      0.05         4
+       t1218       0.09      1.00      0.16        42
+       t1219       0.07      1.00      0.13        34
+       t1222       0.00      1.00      0.01         2
+       t1482       0.01      1.00      0.01         3
+       t1485       0.01      1.00      0.02         5
+       t1486       0.08      1.00      0.14        36
+       t1489       0.06      0.69      0.11        16
+       t1490       0.05      0.87      0.10        23
+       t1496       0.02      0.82      0.05        11
+       t1497       0.12      1.00      0.21        56
+       t1498       0.02      0.56      0.04         9
+       t1499       0.01      1.00      0.01         3
+       t1505       0.06      0.64      0.11        25
+       t1518       0.08      0.86      0.15        36
+       t1528       0.04      1.00      0.08        19
+       t1530       0.01      1.00      0.01         3
+       t1534       0.01      1.00      0.02         5
+       t1539       0.01      1.00      0.03         6
+       t1542       0.01      1.00      0.02         4
+       t1543       0.11      1.00      0.19        50
+       t1546       0.02      0.29      0.04         7
+       t1547       0.29      1.00      0.45       137
+       t1548       0.03      0.45      0.06        11
+       t1550       0.20      0.09      0.12        11
+       t1552       0.08      1.00      0.15        39
+       t1553       0.10      1.00      0.18        48
+       t1555       0.13      0.98      0.23        61
+       t1556       0.01      1.00      0.03         6
+       t1557       0.02      1.00      0.04        10
+       t1559       0.01      1.00      0.02         5
+       t1560       0.03      1.00      0.05        13
+       t1562       0.12      1.00      0.22        58
+       t1564       0.05      0.68      0.09        19
+       t1566       0.39      1.00      0.56       183
+       t1567       0.05      1.00      0.09        22
+       t1568       0.03      0.75      0.05        12
+       t1569       0.04      1.00      0.09        21
+       t1570       0.02      0.62      0.04         8
+       t1571       0.14      0.66      0.24        59
+       t1572       0.02      0.67      0.04         9
+       t1573       0.22      0.96      0.36        96
+       t1574       0.12      1.00      0.21        56
+       t1583       0.09      1.00      0.16        42
+       t1584       0.08      0.58      0.14        31
+       t1585       0.06      0.96      0.12        26
+       t1586       0.04      0.38      0.07        16
+       t1587       0.04      1.00      0.08        19
+       t1588       0.09      1.00      0.17        44
+       t1589       0.06      0.86      0.11        22
+       t1590       0.02      0.90      0.05        10
+       t1592       0.04      0.94      0.07        17
+       t1595       0.02      0.75      0.04         8
+       t1598       0.03      0.62      0.06        13
+       t1606       0.00      1.00      0.01         2
+       t1608       0.07      1.00      0.12        31
+       t1614       0.01      1.00      0.02         5
+     unknown       0.08      0.48      0.14        33
+
+   micro avg       0.10      0.94      0.18      5067
+   macro avg       0.09      0.86      0.15      5067
+weighted avg       0.23      0.94      0.34      5067
+ samples avg       0.10      0.91      0.17      5067
+
+
+Best per-technique thresholds: {'t1001': np.float64(0.5), 't1003': np.float64(0.5), 't1005': np.float64(0.55), 't1007': np.float64(0.5), 't1012': np.float64(0.1), 't1014': np.float64(0.1), 't1016': np.float64(0.1), 't1018': np.float64(0.5), 't1020': np.float64(0.1), 't1021': np.float64(0.4), 't1027': np.float64(0.1), 't1033': np.float64(0.4), 't1036': np.float64(0.1), 't1041': np.float64(0.5), 't1046': np.float64(0.1), 't1047': np.float64(0.55), 't1048': np.float64(0.5), 't1049': np.float64(0.55), 't1053': np.float64(0.55), 't1055': np.float64(0.4), 't1056': np.float64(0.1), 't1057': np.float64(0.45), 't1059': np.float64(0.1), 't1064': np.float64(0.1), 't1068': np.float64(0.5), 't1069': np.float64(0.1), 't1070': np.float64(0.1), 't1071': np.float64(0.1), 't1072': np.float64(0.55), 't1074': np.float64(0.45), 't1078': np.float64(0.5), 't1082': np.float64(0.4), 't1083': np.float64(0.1), 't1087': np.float64(0.1), 't1090': np.float64(0.55), 't1095': np.float64(0.1), 't1098': np.float64(0.4), 't1102': np.float64(0.1), 't1105': np.float64(0.1), 't1106': np.float64(0.65), 't1110': np.float64(0.65), 't1112': np.float64(0.1), 't1113': np.float64(0.45), 't1114': np.float64(0.4), 't1115': np.float64(0.45), 't1119': np.float64(0.45), 't1123': np.float64(0.45), 't1124': np.float64(0.45), 't1125': np.float64(0.5), 't1129': np.float64(0.6), 't1132': np.float64(0.1), 't1133': np.float64(0.55), 't1134': np.float64(0.45), 't1135': np.float64(0.65), 't1136': np.float64(0.1), 't1140': np.float64(0.1), 't1176': np.float64(0.45), 't1185': np.float64(0.5), 't1189': np.float64(0.45), 't1190': np.float64(0.45), 't1192': np.float64(0.5), 't1193': np.float64(0.5), 't1195': np.float64(0.5), 't1199': np.float64(0.5), 't1203': np.float64(0.6), 't1204': np.float64(0.1), 't1205': np.float64(0.4), 't1210': np.float64(0.1), 't1213': np.float64(0.1), 't1217': np.float64(0.45), 't1218': np.float64(0.1), 't1219': np.float64(0.1), 't1222': np.float64(0.1), 't1482': np.float64(0.45), 't1485': np.float64(0.5), 't1486': np.float64(0.35), 't1489': np.float64(0.5), 't1490': np.float64(0.5), 't1496': np.float64(0.6), 't1497': np.float64(0.1), 't1498': np.float64(0.35), 't1499': np.float64(0.45), 't1505': np.float64(0.55), 't1518': np.float64(0.45), 't1528': np.float64(0.1), 't1530': np.float64(0.1), 't1534': np.float64(0.5), 't1539': np.float64(0.5), 't1542': np.float64(0.5), 't1543': np.float64(0.3), 't1546': np.float64(0.5), 't1547': np.float64(0.45), 't1548': np.float64(0.5), 't1550': np.float64(0.6), 't1552': np.float64(0.1), 't1553': np.float64(0.1), 't1555': np.float64(0.4), 't1556': np.float64(0.55), 't1557': np.float64(0.4), 't1559': np.float64(0.4), 't1560': np.float64(0.1), 't1562': np.float64(0.1), 't1564': np.float64(0.5), 't1566': np.float64(0.1), 't1567': np.float64(0.45), 't1568': np.float64(0.55), 't1569': np.float64(0.1), 't1570': np.float64(0.6), 't1571': np.float64(0.6), 't1572': np.float64(0.5), 't1573': np.float64(0.45), 't1574': np.float64(0.1), 't1583': np.float64(0.1), 't1584': np.float64(0.5), 't1585': np.float64(0.45), 't1586': np.float64(0.5), 't1587': np.float64(0.45), 't1588': np.float64(0.1), 't1589': np.float64(0.5), 't1590': np.float64(0.5), 't1592': np.float64(0.45), 't1595': np.float64(0.5), 't1598': np.float64(0.5), 't1606': np.float64(0.35), 't1608': np.float64(0.1), 't1614': np.float64(0.1), 'unknown': np.float64(0.6)}
+
+OTX XGBoost Baseline Micro F1: 0.30516644072902543
+OTX XGBoost Baseline Macro F1: 0.10228789651528185
+
+2. CVE
+
+- Model 1: Logistic Regression (TF-IDF + CalibratedClassifierCV)
+CVE best threshold: 0.33 (train F1: 0.8104)
+CVE Accuracy: 0.8138801261829653
+CVE F1: 0.512396694214876
+              precision    recall  f1-score   support
+
+           0       0.89      0.88      0.88       258
+           1       0.50      0.53      0.51        59
+
+    accuracy                           0.81       317
+   macro avg       0.70      0.70      0.70       317
+weighted avg       0.82      0.81      0.82       317
+
+Risk Band Distribution: {'LOW': 244, 'MEDIUM': 70, 'HIGH': 3}
+
+- Model 2: XGBoost Alternative for CVE
+CVE XGBoost Accuracy: 0.8138801261829653
+CVE XGBoost F1: 0.512396694214876
+              precision    recall  f1-score   support
+
+           0       0.89      0.88      0.88       258
+           1       0.50      0.53      0.51        59
+
+    accuracy                           0.81       317
+   macro avg       0.70      0.70      0.70       317
+weighted avg       0.82      0.81      0.82       317
+
+3. Domains (LGBMClassifier + CalibratedClassifierCV)
+
+Domain Accuracy: 0.8181818181818182
+Domain Macro F1: 0.45
+              precision    recall  f1-score   support
+
+         low       0.82      1.00      0.90        27
+      medium       0.00      0.00      0.00         6
+
+    accuracy                           0.82        33
+   macro avg       0.41      0.50      0.45        33
+weighted avg       0.67      0.82      0.74        33
+
+
+Risk Band Distribution: {'CLEAN': 27, 'SUSPICIOUS': 6}
+
+4. IPs
+
+- Model 1: Logistic Regression (Calibrated)
+===== Logistic Regression =====
+Accuracy: 0.95
+Macro F1: 0.7619718309859156
+              precision    recall  f1-score   support
+
+        high       1.00      0.67      0.80         3
+         low       0.97      1.00      0.99        35
+      medium       0.50      0.50      0.50         2
+
+    accuracy                           0.95        40
+   macro avg       0.82      0.72      0.76        40
+weighted avg       0.95      0.95      0.95        40
+
+- Model 2: XGBoost (Calibrated)
+===== XGBoost =====
+Accuracy: 0.975
+Macro F1: 0.8666666666666667
+              precision    recall  f1-score   support
+
+        high       1.00      0.67      0.80         3
+         low       1.00      1.00      1.00        35
+      medium       0.67      1.00      0.80         2
+
+    accuracy                           0.97        40
+   macro avg       0.89      0.89      0.87        40
+weighted avg       0.98      0.97      0.97        40
+
+III - Current Preprocessing Architecture
+
+0) Load Inspected Data
+
+1) OTX Pipeline: Collapse Sub-techniques (Split by comma/semicolon, Collapse sub-techniques, Deduplicate + Sort) → Preprocess (Text normalization, Log time feature, TLP encoding, Malware family presence flags, ATT&CK lexical keyword signals, ATT&CK multi-label, Filter rare labels, Remove empty rows, Convert lists to tuples for hashing, Remove duplicates, Convert back to lists, Drop low-value / constant columns, Remove redundant features)
+
+2) CVE Pipeline: Text cleanup, Categorical cleanup, Datetime conversion, Recency feature, Text field (Lower Noise Design), Structured meta field
+
+3) Domain Pipeline: Store raw domain string for char-level TF-IDF, Date fix, Engineered binary flags, Lexical domain intelligence features, Suspicious keyword flags, Ratios, Log counts, Categorical cleaning, WHOIS completeness, # Remove noisy / weak columns from modeling scope (keep in df for reference), # Popularity_Rank, Data_Source, Registrar are high-sparsity / leakage risk
+
+4) IP Pipeline: Text (NO Threat_Label / Threat_Category — they leak the target), Numeric (excluding constant / near-zero variance columns), ASN as categorical, Ratios (using raw votes only, Total_Reports is constant), Log features, Safer reputation scaling, TOR flag robustness, IP structure feature, Geolocation risk, Reputation flags
+
+5) Finalize savestates, Split dataframes
