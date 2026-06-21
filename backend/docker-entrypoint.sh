@@ -27,18 +27,26 @@ while True:
 "
 fi
 
-# Schema is managed by SQLAlchemy's Base.metadata.create_all() in main.py:on_startup()
-# SQL files in /app/sql/ are reference/documentation only.
-echo "Schema will be created by SQLAlchemy on startup."
+# Create schema BEFORE CSV import check (which queries the tables).
+# SQLAlchemy's create_all() is idempotent (IF NOT EXISTS).
+echo "Creating database schema (if needed)..."
+cd /app/backend
+python -c "
+import sys
+sys.path.insert(0, '/app/backend')
+from app.database import engine
+from app.models.base import Base
+import app.models as _models
+Base.metadata.create_all(bind=engine)
+print('Schema ready.')
+"
 
 # Import CSV data if database is empty
 if [ -d "/app/data" ]; then
     echo "Checking if initial data needs to be loaded..."
-    cd /app
-    python -c "
+    cd /app/backend
+    PYTHONPATH=/app/backend python -c "
 import sys
-from pathlib import Path
-sys.path.insert(0, '/app/backend')
 from app.database import SessionLocal
 from app.models.index import IntelIndex
 db = SessionLocal()
@@ -46,11 +54,14 @@ count = db.query(IntelIndex).count()
 db.close()
 if count == 0:
     print('Database empty. Loading CSV data...')
-    load_script = Path('/app/load_csv.py')
-    if load_script.exists():
-        exec(load_script.read_text())
+    import subprocess, os
+    env = os.environ.copy()
+    env['PYTHONPATH'] = '/app/backend'
+    result = subprocess.run([sys.executable, '/app/load_csv.py'], capture_output=True, text=True, env=env)
+    if result.returncode != 0:
+        print(f'Warning: CSV import failed: {result.stderr}')
     else:
-        print('Warning: load_csv.py not found.')
+        print(result.stdout)
 else:
     print(f'Database has {count} records (skipping import).')
 " || echo "Warning: CSV import skipped (may already be loaded)."
