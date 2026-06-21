@@ -37,7 +37,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/models
+      - ./ml/models:/models
       - ./backend/data:/app/data
       - ./backend/.env:/app/backend/.env
 

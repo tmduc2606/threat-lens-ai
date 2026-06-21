@@ -27,7 +27,7 @@ COPY backend/data/ /app/data/
 
 RUN mkdir -p /models /app/static/frontend
 
-COPY models/ /models/
+COPY ml/models/ /models/
 COPY frontend/ /app/static/frontend/
 
 COPY backend/docker-entrypoint.sh /app/docker-entrypoint.sh

@@ -64,7 +64,11 @@ def on_startup():
 
 # Serve frontend static files (HTML, JS, CSS) at /
 # API routes are registered first (with /api prefix), so they take precedence.
-frontend_path = Path(__file__).resolve().parent.parent.parent / "frontend"
+# In Docker: main.py is at /app/backend/app/main.py, frontend at /app/static/frontend/
+frontend_path = Path(__file__).resolve().parent.parent.parent / "static" / "frontend"
+if not frontend_path.is_dir():
+    # Fallback: look for frontend/ at the project root (local dev layout)
+    frontend_path = Path(__file__).resolve().parent.parent.parent / "frontend"
 if frontend_path.is_dir():
     app.mount(
         "/",

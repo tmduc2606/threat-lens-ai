@@ -6,25 +6,30 @@ echo "=== ThreatLensAI Docker Entrypoint ==="
 # If using PostgreSQL, wait for it to be ready
 if [ -n "$DATABASE_URL" ] && echo "$DATABASE_URL" | grep -q "postgres"; then
     echo "Waiting for PostgreSQL..."
-    until pg_isready -h "$(echo $DATABASE_URL | sed -n 's/.*@\(.*\):.*/\1/p')" -U postgres 2>/dev/null; do
-        sleep 2
-    done
-    echo "PostgreSQL is ready."
+    python -c "
+import os, time, re, sys
+url = os.environ.get('DATABASE_URL', '')
+m = re.search(r'@([^:]+):', url)
+host = m.group(1) if m else 'db'
+print(f'  host={host}', flush=True)
+while True:
+    import psycopg2
+    try:
+        conn = psycopg2.connect(host=host, port=5432, user='postgres', password='postgres', dbname='threatlensai', connect_timeout=3)
+        conn.close()
+        print('  PostgreSQL is ready.', flush=True)
+        break
+    except Exception as e:
+        print(f'  Waiting... ({e})', flush=True)
+        time.sleep(2)
+    except KeyboardInterrupt:
+        sys.exit(1)
+"
 fi
 
-# Run schema migration if SQL files exist
-if [ -d "/app/sql" ]; then
-    echo "Running SQL schema..."
-    for f in /app/sql/*.sql; do
-        if [ -f "$f" ]; then
-            if [ -n "$DATABASE_URL" ] && echo "$DATABASE_URL" | grep -q "postgres"; then
-                PGPASSWORD=postgres psql -h "$(echo $DATABASE_URL | sed -n 's/.*@\(.*\):.*/\1/p')" -U postgres -d threatlensai -f "$f" 2>/dev/null || true
-            else
-                echo "SQLite: schema created by SQLAlchemy automatically."
-            fi
-        fi
-    done
-fi
+# Schema is managed by SQLAlchemy's Base.metadata.create_all() in main.py:on_startup()
+# SQL files in /app/sql/ are reference/documentation only.
+echo "Schema will be created by SQLAlchemy on startup."
 
 # Import CSV data if database is empty
 if [ -d "/app/data" ]; then
@@ -33,7 +38,7 @@ if [ -d "/app/data" ]; then
     python -c "
 import sys
 from pathlib import Path
-sys.path.insert(0, '/app')
+sys.path.insert(0, '/app/backend')
 from app.database import SessionLocal
 from app.models.index import IntelIndex
 db = SessionLocal()
@@ -41,7 +46,11 @@ count = db.query(IntelIndex).count()
 db.close()
 if count == 0:
     print('Database empty. Loading CSV data...')
-    exec(open('load_csv.py').read())
+    load_script = Path('/app/load_csv.py')
+    if load_script.exists():
+        exec(load_script.read_text())
+    else:
+        print('Warning: load_csv.py not found.')
 else:
     print(f'Database has {count} records (skipping import).')
 " || echo "Warning: CSV import skipped (may already be loaded)."
