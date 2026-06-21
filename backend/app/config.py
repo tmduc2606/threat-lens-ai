@@ -20,7 +20,7 @@ class Settings:
     app_name: str = os.getenv("APP_NAME", "ThreatLensAI API")
     environment: str = os.getenv("ENVIRONMENT", "development")
     database_url: str = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:postgres@localhost:5432/threatlensai")
-    # Supports: postgresql+psycopg2://user:pass@host/db (default), postgresql+asyncpg://user:pass@host/db, sqlite:///./path.db (fallback)
+    # PostgreSQL: postgresql+psycopg2://user:pass@host/db (set DATABASE_URL in .env)
     api_host: str = os.getenv("API_HOST", "0.0.0.0")
     api_port: int = int(os.getenv("API_PORT", "8000"))
     cors_origins: List[str] = None  # type: ignore[assignment]

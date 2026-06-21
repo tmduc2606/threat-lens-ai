@@ -122,7 +122,7 @@ See `agents/README.md` for the full decision matrix and anti-patterns.
 
 ## Critical Conventions
 
-1. **Backend:** Python 3.10+ with FastAPI + SQLAlchemy + PostgreSQL (default) / SQLite (fallback)
+1. **Backend:** Python 3.10+ with FastAPI + SQLAlchemy + PostgreSQL 16
 2. **Frontend:** Vanilla JS + Tailwind CSS (CDN) — no framework
 3. **CSV column naming:**
    - Backend runtime CSVs: `Title_Case` (e.g., `Malicious_Votes`, `Domain_Length`)

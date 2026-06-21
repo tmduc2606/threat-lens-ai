@@ -19,78 +19,64 @@ ThreatLensAI is a full-stack threat intelligence platform that aggregates data f
 - **Weighted composite scoring** — Multi-signal risk scoring calibrated to research standards
 - **Async architecture** — FastAPI + SQLAlchemy async with parallel API enrichment
 
-## Architecture
-
-```
-threat-lens-ai/
-├── backend/                  # FastAPI application
-│   ├── app/
-│   │   ├── config.py         # Settings (env-driven, PostgreSQL default)
-│   │   ├── database.py       # Sync engine (SQLite/PostgreSQL)
-│   │   ├── database_async.py # Async engine (aiosqlite/asyncpg)
-│   │   ├── main.py           # App entry, router registration, static files
-│   │   ├── models/           # SQLAlchemy ORM (9 tables)
-│   │   ├── routers/          # 8 API routers
-│   │   ├── services/
-│   │   │   ├── api_clients/  # 12 external API clients (httpx async)
-│   │   │   ├── enrichment_pipeline.py  # Parallel multi-source enrichment
-│   │   │   ├── modeling_service.py     # ML prediction + feature engineering
-│   │   │   ├── scan_service.py         # Scan orchestration + heuristics
-│   │   │   └── ...
-│   │   ├── schemas/          # Pydantic models
-│   │   └── utils/            # Scoring, normalization, response helpers
-│   ├── data/                 # Runtime CSV seed data (Title_Case columns)
-│   ├── scripts/              # DB management, migration, inspection
-│   ├── sql/                  # Schema reference (cross-DB compatible)
-│   ├── tests/                # 17 tests (pytest)
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/                 # Vanilla JS + Tailwind CSS (CDN)
-│   ├── index.html            # Search dashboard
-│   ├── results.html          # Scan results with source breakdown
-│   ├── details.html          # Single-IOC detail with SHAP explanation
-│   └── assets/js/            # api.js, ui.js, search.js, theme.js
-├── ml/                       # Machine learning pipeline
-│   ├── models/               # 10 trained .joblib artifacts + version.json
-│   ├── src/                  # Feature engineering (shared with backend)
-│   │   ├── features.py       # build_domain_features(), build_ip_features()
-│   │   └── utils.py
-│   ├── configs/              # Lookup tables (TLDs, countries, keywords)
-│   ├── data/                 # Training data (raw, interim, processed, splits)
-│   ├── notebooks/            # EDA, preprocessing, modeling (Jupyter)
-│   ├── scripts/              # Data quality, retraining, verification
-│   ├── outputs/artifacts/    # Training output mirrors
-│   ├── logs/                 # Training logs
-│   └── skills/               # ML/DL architect agent persona
-├── agents/                   # Critic agent personas for code review
-│   ├── code-reviewer.md
-│   ├── security-auditor.md
-│   ├── test-engineer.md
-│   └── web-performance-auditor.md
-├── skills/                   # Workflow skills (phase-gated)
-│   ├── spec-driven-development/
-│   ├── planning-and-task-breakdown/
-│   ├── code-review-and-quality/
-│   ├── security-and-hardening/
-│   └── shipping-and-launch/
-├── logs/                     # Project logs, benchmarks, visual screenshots
-├── CHANGELOG.md              # Version history
-├── docker-compose.yml        # PostgreSQL + API
-└── README.md
-```
-
 ## Quick Start
+
+The fastest way to run ThreatLensAI is with Docker. PostgreSQL, the API, and all dependencies are configured automatically.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) + [Docker Compose](https://docs.docker.com/compose/install/)
+- API keys for enrichment sources (optional — heuristic fallback works without keys)
+
+### 1. Clone and start
+
+```bash
+git clone https://github.com/<your-org>/threat-lens-ai.git
+cd threat-lens-ai
+docker compose up --build -d
+```
+
+This starts PostgreSQL and the API. On first run, the database is initialized and seed data is loaded automatically.
+
+### 2. Verify
+
+```bash
+# Health check
+curl http://localhost:8000/api/health
+# {"status":"ok"}
+
+# Model status (all should show loaded: true)
+curl http://localhost:8000/api/model/status
+
+# Scan test
+curl "http://localhost:8000/api/scan?q=185.220.101.42" | jq ".risk_band"
+# "HIGH"
+```
+
+Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+### 3. Stop
+
+```bash
+docker compose down
+# Add -v to also remove the database volume
+docker compose down -v
+```
+
+---
+
+## Local Development (without Docker)
+
+For contributors who prefer running the stack locally.
 
 ### Prerequisites
 
 - Python 3.10+
-- PostgreSQL 16 (recommended) or SQLite (zero-config fallback)
-- API keys for enrichment sources (optional — heuristic fallback works without keys)
+- PostgreSQL 16 (or SQLite for zero-config fallback)
 
-### 1. Clone and install
+### 1. Install
 
 ```bash
-git clone https://github.com/<your-org>/threat-lens-ai.git
 cd threat-lens-ai/backend
 python -m venv .venv
 source .venv/bin/activate        # Linux/Mac
@@ -109,13 +95,13 @@ cp .env.example .env
 
 | Mode | `DATABASE_URL` |
 |------|---------------|
-| PostgreSQL (default) | `postgresql+psycopg2://postgres:postgres@localhost:5432/threatlensai` |
+| PostgreSQL | `postgresql+psycopg2://postgres:postgres@localhost:5432/threatlensai` |
 | SQLite (no setup) | `sqlite:///./threatlensai.db` |
 
 ### 3. Run
 
 ```bash
-# Ensure models are in place (already included)
+# Trained models are included — no manual copy needed
 ls ../ml/models/*.joblib         # 10 .joblib files + version.json
 
 # Start server
@@ -124,17 +110,52 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 Open [http://localhost:8000](http://localhost:8000)
 
-### 4. Verify
+---
 
-```bash
-curl http://localhost:8000/api/health
-# {"status":"ok"}
+## Architecture
 
-curl http://localhost:8000/api/model/status
-# All models: loaded=true
-
-curl "http://localhost:8000/api/scan?q=185.220.101.42" | jq ".risk_band"
-# "HIGH"
+```
+threat-lens-ai/
+├── backend/                  # FastAPI application
+│   ├── app/
+│   │   ├── config.py         # Settings (env-driven, PostgreSQL default)
+│   │   ├── database.py       # Sync engine
+│   │   ├── database_async.py # Async engine (asyncpg)
+│   │   ├── main.py           # App entry, router registration, static files
+│   │   ├── models/           # SQLAlchemy ORM (9 tables)
+│   │   ├── routers/          # 8 API routers
+│   │   ├── services/
+│   │   │   ├── api_clients/  # 12 external API clients (httpx async)
+│   │   │   ├── enrichment_pipeline.py  # Parallel multi-source enrichment
+│   │   │   ├── modeling_service.py     # ML prediction + feature engineering
+│   │   │   ├── scan_service.py         # Scan orchestration + heuristics
+│   │   │   └── ...
+│   │   ├── schemas/          # Pydantic models
+│   │   └── utils/            # Scoring, normalization, response helpers
+│   ├── data/                 # Runtime CSV seed data (Title_Case columns)
+│   ├── scripts/              # DB management, migration, inspection
+│   ├── sql/                  # Schema reference
+│   ├── tests/                # 17 tests (pytest)
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/                 # Vanilla JS + Tailwind CSS (CDN)
+│   ├── index.html            # Search dashboard
+│   ├── results.html          # Scan results with source breakdown
+│   ├── details.html          # Single-IOC detail with SHAP explanation
+│   └── assets/js/            # api.js, ui.js, search.js, theme.js
+├── ml/                       # Machine learning pipeline
+│   ├── models/               # 10 trained .joblib artifacts + version.json
+│   ├── src/                  # Feature engineering (shared with backend)
+│   ├── configs/              # Lookup tables (TLDs, countries, keywords)
+│   ├── data/                 # Training data (raw, interim, processed, splits)
+│   ├── notebooks/            # EDA, preprocessing, modeling (Jupyter)
+│   ├── scripts/              # Data quality, retraining, verification
+│   └── skills/               # ML/DL architect agent persona
+├── agents/                   # Critic agent personas
+├── skills/                   # Workflow skills (phase-gated)
+├── logs/                     # Project logs, benchmarks, savestates
+├── docker-compose.yml        # PostgreSQL + API
+└── README.md
 ```
 
 ## API Reference
@@ -181,17 +202,13 @@ ThreatLensAI uses a **weighted multi-signal composite score** (0–10):
 
 Risk bands: `CRITICAL` (8.5–10), `HIGH` (6.5–8.5), `MEDIUM` (4.0–6.5), `LOW` (1.5–4.0), `IGNORE` (0–1.5).
 
-## Docker
-
-```bash
-cd threat-lens-ai
-docker compose up --build -d     # PostgreSQL + API
-docker compose logs -f api       # View logs
-```
-
 ## Database Migration
 
+To migrate from a legacy SQLite database to PostgreSQL:
+
 ```bash
+cd threat-lens-ai/backend
+
 # Preview
 python scripts/migrate_sqlite_to_postgres.py \
   --sqlite ./threatlensai.db \
@@ -216,7 +233,7 @@ python -m pytest tests/ -v
 ## Tech Stack
 
 - **Backend:** Python 3.10+, FastAPI, SQLAlchemy 2.0, Pydantic 2
-- **Database:** PostgreSQL 16 (default), SQLite (fallback)
+- **Database:** PostgreSQL 16
 - **ML:** scikit-learn, XGBoost, LightGBM, sentence-transformers (MiniLM), SHAP
 - **Enrichment:** httpx (async), 13 API integrations
 - **Frontend:** Vanilla JS, Tailwind CSS (CDN), no framework
