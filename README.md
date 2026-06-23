@@ -1,7 +1,5 @@
 # ThreatLensAI
 
-**Production-grade cyber threat intelligence platform** — scan IPs, domains, CVEs, and OTX pulses with ML-powered classification, multi-source enrichment, and explainable results.
-
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791.svg)](https://www.postgresql.org)
@@ -9,15 +7,17 @@
 
 ## Overview
 
-ThreatLensAI is a full-stack threat intelligence platform that aggregates data from 13+ security APIs, classifies threats using trained ML models (XGBoost, LightGBM, Logistic Regression, MiniLM), and presents results through a clean, dark-mode web interface.
+ThreatLensAI is a cyber threat intelligence platform that aggregates data from 13+ security APIs, classifies threats using trained ML models (XGBoost, LightGBM, Logistic Regression, MiniLM).
+
+All of the needs for user - _scans IPs, domains, CVEs, and OTX pulses, yielding explainable results, historical records, tips of the day_.
 
 **Key capabilities:**
 
-- **Multi-source enrichment** — AbuseIPDB, OTX, VirusTotal, NVD, EPSS, ThreatFox, URLhaus, MalwareBazaar, URLScan, RDAP, WhoisJSON, CISA KEV
-- **ML-powered classification** — 6 trained models for IP, domain, CVE, and OTX threat categorization
-- **Explainable results** — SHAP-based feature importance for every prediction
-- **Weighted composite scoring** — Multi-signal risk scoring calibrated to research standards
-- **Async architecture** — FastAPI + SQLAlchemy async with parallel API enrichment
+- **Multi-source enrichment**: AbuseIPDB, OTX, VirusTotal, NVD, EPSS, ThreatFox, URLhaus, MalwareBazaar, URLScan, RDAP, WhoisJSON, CISA KEV
+- **ML-powered classification**: 6 trained models for IP, domain, CVE, and OTX threat categorization
+- **Explainable results**: SHAP-based feature importance for every prediction
+- **Weighted composite scoring**: Multi-signal risk scoring calibrated to research standards
+- **Async architecture**: FastAPI + SQLAlchemy async with parallel API enrichment
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ cd threat-lens-ai
 docker compose up --build -d
 ```
 
-This starts PostgreSQL and the API. On first run, the database is initialized and seed data is loaded automatically.
+This starts PostgreSQL and the API. On first run, the database initialization will take several minutes to complete automatically.
 
 ### 2. Verify
 
@@ -67,7 +67,7 @@ docker compose down -v
 
 ## Local Development (without Docker)
 
-For contributors who prefer running the stack locally.
+For users who prefer running the stack locally.
 
 ### Prerequisites
 
@@ -149,11 +149,8 @@ threat-lens-ai/
 │   ├── configs/              # Lookup tables (TLDs, countries, keywords)
 │   ├── data/                 # Training data (raw, interim, processed, splits)
 │   ├── notebooks/            # EDA, preprocessing, modeling (Jupyter)
-│   ├── scripts/              # Data quality, retraining, verification
-│   └── skills/               # ML/DL architect agent persona
-├── agents/                   # Critic agent personas
-├── skills/                   # Workflow skills (phase-gated)
-├── logs/                     # Project logs, benchmarks, savestates
+│   └── scripts/              # Data quality, retraining, verification
+├── logs/                     # Project logs
 ├── docker-compose.yml        # PostgreSQL + API
 └── README.md
 ```
@@ -201,43 +198,6 @@ ThreatLensAI uses a **weighted multi-signal composite score** (0–10):
 | Source credibility | 0.10 | Per-source trust |
 
 Risk bands: `CRITICAL` (8.5–10), `HIGH` (6.5–8.5), `MEDIUM` (4.0–6.5), `LOW` (1.5–4.0), `IGNORE` (0–1.5).
-
-## Database Migration
-
-To migrate from a legacy SQLite database to PostgreSQL:
-
-```bash
-cd threat-lens-ai/backend
-
-# Preview
-python scripts/migrate_sqlite_to_postgres.py \
-  --sqlite ./threatlensai.db \
-  --postgres postgresql+psycopg2://user:pass@host/db \
-  --dry-run
-
-# Execute
-python scripts/migrate_sqlite_to_postgres.py \
-  --sqlite ./threatlensai.db \
-  --postgres postgresql+psycopg2://user:pass@host/db
-```
-
-## Testing
-
-```bash
-cd threat-lens-ai/backend
-python -m pytest tests/ -v
-```
-
-17 tests across 4 files: model versioning, heuristic fallback, retrain endpoints, feature parity.
-
-## Tech Stack
-
-- **Backend:** Python 3.10+, FastAPI, SQLAlchemy 2.0, Pydantic 2
-- **Database:** PostgreSQL 16
-- **ML:** scikit-learn, XGBoost, LightGBM, sentence-transformers (MiniLM), SHAP
-- **Enrichment:** httpx (async), 13 API integrations
-- **Frontend:** Vanilla JS, Tailwind CSS (CDN), no framework
-- **Containerization:** Docker, docker-compose
 
 ## License
 
